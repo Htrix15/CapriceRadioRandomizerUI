@@ -207,6 +207,7 @@ internal class CapricePageServiceTests
         Assert.That(actual, Is.EqualTo(expected).AsCollection);
     }
 
+
     [Test]
     public void GetGenreKey_ShouldReturnExpectedResult()
     {
@@ -215,6 +216,30 @@ internal class CapricePageServiceTests
         var expected = "indianfolk";
 
         var actual = service.GetGenreKey(_jsPlayerParamsMoc);
+
+        Assert.That(actual, Is.EqualTo(expected));
+    }
+
+    [Test]
+    public void CreateSubGenreLink_ShouldReturnExpectedResult()
+    {
+        var service = new CapricePageService();
+
+        var expected = "http://radcap.ru/indianfolk";
+
+        var actual = service.CreateSubGenreLink("indianfolk");
+
+        Assert.That(actual, Is.EqualTo(expected));
+    }
+
+    [Test]
+    public void CreateSubGenreLink_WithoutReplace_ShouldReturnExpectedResult()
+    {
+        var service = new CapricePageService();
+
+        var expected = "http://radcap.ru/indianfolk";
+
+        var actual = service.CreateSubGenreLink("http://radcap.ru/indianfolk");
 
         Assert.That(actual, Is.EqualTo(expected));
     }
@@ -247,5 +272,13 @@ internal class CapricePageServiceTests
         var result = await service.CreateGenres(_mainPageMock);
 
         Assert.That(result, Has.Count.EqualTo(10));
+    }
+
+    [Test]
+    public async Task CreateGenres_ShouldNotThrow()
+    {
+        var service = new CapricePageService();
+
+        Assert.DoesNotThrowAsync(async () => await service.CreateGenres());
     }
 }

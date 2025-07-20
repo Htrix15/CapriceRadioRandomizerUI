@@ -57,6 +57,13 @@ public partial class CapricePageService
         return result;
     }
 
+    public string CreateSubGenreLink(string link)
+    {
+        return link.StartsWith(CapricePageConstants.RootPage, StringComparison.CurrentCultureIgnoreCase)
+            ? link
+            : $"{CapricePageConstants.RootPage}/{link}";
+     }
+
     public HtmlNode SearchPlayerJsScript(HtmlDocument page)
     {
         var table = page.DocumentNode.SelectSingleNode("//table[contains(@class, 'player-big')]") ?? throw new Exception("Table with player not found!");
@@ -132,7 +139,8 @@ public partial class CapricePageService
 
             foreach(var subGenresLink in subGenresLinks)
             {
-                var genrePage = await GetPage(subGenresLink.url);
+                var subGenreLink = CreateSubGenreLink(subGenresLink.url);
+                var genrePage = await GetPage(subGenreLink);
                 var playerJsScript = SearchPlayerJsScript(genrePage);
                 var jsScriptParamsStr = GetPlayerJsScriptParamsStr(playerJsScript);
                 var jsScriptParams = SplitePlayerJsScriptParams(jsScriptParamsStr);
