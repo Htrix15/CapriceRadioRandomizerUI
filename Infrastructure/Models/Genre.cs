@@ -7,10 +7,10 @@ public class Genre
     public string? Name { get; set; }
     public string? MainName { get; set; }
     public required bool IsAvailable { get; set; }
-    public required bool IsDisabled { get; set; }
-    public required bool IsSkip { get; set; }
-    public required int TrackCount { get; set; }
-    public required int RatingCount { get; set; }
-    public required int Rating { get; set; }
+    public bool? IsDisabled { get; set; }
+    public bool? IsSkip { get; set; }
+    public int TrackCount { get; set; }
+    public int RatingCount { get; set; }
+    public int Rating { get; set; }
     public RemoteSources? RemoteSources { get; set; }
 }

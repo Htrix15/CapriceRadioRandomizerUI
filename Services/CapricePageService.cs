@@ -1,14 +1,27 @@
 ﻿using HtmlAgilityPack;
 using Infrastructure.Constants;
+using Infrastructure.Models;
+using System.Collections.Generic;
+using System.Text.Json;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace Services;
 
-public class CapricePageService
+public partial class CapricePageService
 {
-  
-    public async Task<HtmlDocument> GetCapricePage()
+    [GeneratedRegex(@"file:\[(\S*)]}\);")]
+    private static partial Regex SearchPlayerJsParams();
+
+    [GeneratedRegex(@"\{(?:[^{}]|(?<DEPTH>\{)|(?<-DEPTH>\}))+(?(DEPTH)(?!))\}", RegexOptions.Singleline)]
+    private static partial Regex SearchJsonObjects();
+
+    [GeneratedRegex(@"\s+")]
+    private static partial Regex NormalizedText();
+
+    public async Task<HtmlDocument> GetPage(string url)
     {
-        var page = await new HtmlWeb().LoadFromWebAsync(CapricePageConstants.MainPagehUrl);
+        var page = await new HtmlWeb().LoadFromWebAsync(url);
         return page ?? throw new Exception("MainPage not found!");
     }
 
@@ -39,6 +52,103 @@ public class CapricePageService
             var genreName = linkNode.FirstChild.InnerText.Trim();
             var url = linkNode.GetAttributeValue("href", string.Empty);
             result.Add((genreName, url));
+        }
+
+        return result;
+    }
+
+    public HtmlNode SearchPlayerJsScript(HtmlDocument page)
+    {
+        var table = page.DocumentNode.SelectSingleNode("//table[contains(@class, 'player-big')]") ?? throw new Exception("Table with player not found!");
+        return table.SelectSingleNode(".//script") ?? throw new Exception("Player script not found!");
+    }     
+
+    public string GetPlayerJsScriptParamsStr(HtmlNode node)
+    {
+        var normalizedText = NormalizedText().Replace(node.InnerHtml, "");
+        var match = SearchPlayerJsParams().Match(normalizedText);
+        if (!match.Success) throw new Exception("Player script params not parsed!");
+        var jsParams = match.Groups[1].Value;
+        return match.Groups[1].Value;
+    }
+
+    public List<string> SplitePlayerJsScriptParams(string str)
+    {
+        var regex = SearchJsonObjects();
+        var matches = regex.Matches(str);
+        if (!matches.All(m => m.Success)) throw new Exception("Not all script params swgmwnts valid!");
+        return [.. matches.Select(m => m.Value.Replace(",file:", ",\"file\":"))];
+    }
+
+    public List<(string title, string file)> ExtractPlayerJsScriptParamsValues(List<string> jsons)
+    {
+        List<(string title, string file)> result = [];
+
+        foreach(var json in jsons)
+        {
+            var item = JsonSerializer.Deserialize<PlayerJsParams>(json, options: new () { PropertyNameCaseInsensitive = true });
+            result.Add((item!.Title, item!.File));
+        }
+
+        return result;
+    }
+
+    private class PlayerJsParams
+    {
+        public required string Title { get; set; }
+        public required string File { get; set; }
+    }
+
+    public string GetGenreKey(List<(string title, string file)> jsParams)
+    {
+        return jsParams.First().file.Split("/").Last();
+    }
+
+    public RemoteSources CreateRemoteSourcesFromJsParams(List<(string title, string file)> jsParams)
+    {
+        var trackInfoBaseLink = jsParams.First(p => p.title == "2").file;
+        var key = GetGenreKey(jsParams);
+        trackInfoBaseLink = trackInfoBaseLink.Replace(key, $"status.xsl?mount=/{key}");
+
+        return new RemoteSources() { 
+            PlayLink = jsParams.First(p => p.title == "1").file,
+            TrackInfoBaseLink = trackInfoBaseLink,
+        };
+    }
+
+    public async Task<List<Genre>> CreateGenres() => await CreateGenres(await GetPage(CapricePageConstants.MainPagehUrl));
+
+    public async Task<List<Genre>> CreateGenres(HtmlDocument mainPage)
+    {
+        List<Genre> result = [];
+
+        var genresTables = SearchGenresTables(mainPage);
+
+        foreach(var genreTable in genresTables)
+        {
+            var mainGenreTable = SearchMainGenreTable(genreTable);
+            var mainGenreName = GetMainGenreName(mainGenreTable);
+            var subGenresLinks = GetSubGenresLinks(genreTable);
+
+            foreach(var subGenresLink in subGenresLinks)
+            {
+                var genrePage = await GetPage(subGenresLink.url);
+                var playerJsScript = SearchPlayerJsScript(genrePage);
+                var jsScriptParamsStr = GetPlayerJsScriptParamsStr(playerJsScript);
+                var jsScriptParams = SplitePlayerJsScriptParams(jsScriptParamsStr);
+                var jsScriptParamsValues = ExtractPlayerJsScriptParamsValues(jsScriptParams);
+                var genreKey = GetGenreKey(jsScriptParamsValues);
+                var remoteSources = CreateRemoteSourcesFromJsParams(jsScriptParamsValues);
+
+                result.Add(new Genre()
+                {
+                    Key = genreKey,
+                    Name = subGenresLink.genreName,
+                    MainName = mainGenreName,
+                    IsAvailable = true,
+                    RemoteSources = remoteSources,
+                });
+            }
         }
 
         return result;
