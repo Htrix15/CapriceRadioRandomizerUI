@@ -1,9 +1,10 @@
 ﻿using Infrastructure.Interfaces;
 using Infrastructure.Models;
+using Services;
 
 namespace Repositories;
 
-public class CapriceRepository : IRemoteRepository
+public class CapriceRepository(CapricePageService capricePageService) : IRemoteRepository
 {
     public Task<List<Genre>> GetGenres()
     {
