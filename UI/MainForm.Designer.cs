@@ -28,12 +28,195 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Text = "Form1";
+            tableLayoutPanelForm = new TableLayoutPanel();
+            labelTrackName = new Label();
+            tableLayoutPanelGenresOperations = new TableLayoutPanel();
+            tableLayouTrackOperations = new TableLayoutPanel();
+            buttonPlay = new Button();
+            trackBarVolume = new TrackBar();
+            buttonLike = new Button();
+            buttonDislike = new Button();
+            buttonRandom = new Button();
+            buttonDisableGenre = new Button();
+            comboBoxGenres = new ComboBox();
+            comboBoxRandomMode = new ComboBox();
+            tableLayoutPanelForm.SuspendLayout();
+            tableLayoutPanelGenresOperations.SuspendLayout();
+            tableLayouTrackOperations.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)trackBarVolume).BeginInit();
+            SuspendLayout();
+            // 
+            // tableLayoutPanelForm
+            // 
+            tableLayoutPanelForm.ColumnCount = 1;
+            tableLayoutPanelForm.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutPanelForm.Controls.Add(labelTrackName, 0, 0);
+            tableLayoutPanelForm.Controls.Add(tableLayoutPanelGenresOperations, 0, 1);
+            tableLayoutPanelForm.Controls.Add(tableLayouTrackOperations, 0, 2);
+            tableLayoutPanelForm.Dock = DockStyle.Fill;
+            tableLayoutPanelForm.Location = new Point(0, 0);
+            tableLayoutPanelForm.Name = "tableLayoutPanelForm";
+            tableLayoutPanelForm.RowCount = 3;
+            tableLayoutPanelForm.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
+            tableLayoutPanelForm.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
+            tableLayoutPanelForm.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
+            tableLayoutPanelForm.Size = new Size(800, 450);
+            tableLayoutPanelForm.TabIndex = 0;
+            // 
+            // labelTrackName
+            // 
+            labelTrackName.Anchor = AnchorStyles.None;
+            labelTrackName.AutoSize = true;
+            labelTrackName.Location = new Point(366, 67);
+            labelTrackName.Name = "labelTrackName";
+            labelTrackName.Size = new Size(67, 15);
+            labelTrackName.TabIndex = 0;
+            labelTrackName.Text = "Track name";
+            // 
+            // tableLayoutPanelGenresOperations
+            // 
+            tableLayoutPanelGenresOperations.ColumnCount = 6;
+            tableLayoutPanelGenresOperations.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 16.666666F));
+            tableLayoutPanelGenresOperations.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 16.666666F));
+            tableLayoutPanelGenresOperations.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 16.666666F));
+            tableLayoutPanelGenresOperations.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 16.666666F));
+            tableLayoutPanelGenresOperations.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 16.666666F));
+            tableLayoutPanelGenresOperations.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 16.666666F));
+            tableLayoutPanelGenresOperations.Controls.Add(buttonLike, 5, 0);
+            tableLayoutPanelGenresOperations.Controls.Add(buttonDislike, 4, 0);
+            tableLayoutPanelGenresOperations.Controls.Add(comboBoxGenres, 0, 0);
+            tableLayoutPanelGenresOperations.Controls.Add(comboBoxRandomMode, 1, 0);
+            tableLayoutPanelGenresOperations.Controls.Add(buttonRandom, 2, 0);
+            tableLayoutPanelGenresOperations.Controls.Add(buttonDisableGenre, 3, 0);
+            tableLayoutPanelGenresOperations.Dock = DockStyle.Fill;
+            tableLayoutPanelGenresOperations.Location = new Point(3, 152);
+            tableLayoutPanelGenresOperations.Name = "tableLayoutPanelGenresOperations";
+            tableLayoutPanelGenresOperations.RowCount = 1;
+            tableLayoutPanelGenresOperations.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tableLayoutPanelGenresOperations.Size = new Size(794, 143);
+            tableLayoutPanelGenresOperations.TabIndex = 1;
+            // 
+            // tableLayouTrackOperations
+            // 
+            tableLayouTrackOperations.ColumnCount = 2;
+            tableLayouTrackOperations.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayouTrackOperations.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayouTrackOperations.Controls.Add(buttonPlay, 1, 0);
+            tableLayouTrackOperations.Controls.Add(trackBarVolume, 0, 0);
+            tableLayouTrackOperations.Dock = DockStyle.Fill;
+            tableLayouTrackOperations.Location = new Point(3, 301);
+            tableLayouTrackOperations.Name = "tableLayouTrackOperations";
+            tableLayouTrackOperations.RowCount = 1;
+            tableLayouTrackOperations.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            tableLayouTrackOperations.Size = new Size(794, 146);
+            tableLayouTrackOperations.TabIndex = 2;
+            // 
+            // buttonPlay
+            // 
+            buttonPlay.Anchor = AnchorStyles.None;
+            buttonPlay.Location = new Point(558, 61);
+            buttonPlay.Name = "buttonPlay";
+            buttonPlay.Size = new Size(75, 23);
+            buttonPlay.TabIndex = 0;
+            buttonPlay.Text = "Play\\Stop";
+            buttonPlay.UseVisualStyleBackColor = true;
+            // 
+            // trackBarVolume
+            // 
+            trackBarVolume.Anchor = AnchorStyles.None;
+            trackBarVolume.Location = new Point(146, 50);
+            trackBarVolume.Name = "trackBarVolume";
+            trackBarVolume.Size = new Size(104, 45);
+            trackBarVolume.TabIndex = 1;
+            // 
+            // buttonLike
+            // 
+            buttonLike.Anchor = AnchorStyles.None;
+            buttonLike.Location = new Point(689, 60);
+            buttonLike.Name = "buttonLike";
+            buttonLike.Size = new Size(75, 23);
+            buttonLike.TabIndex = 0;
+            buttonLike.Text = "Like";
+            buttonLike.UseVisualStyleBackColor = true;
+            // 
+            // buttonDislike
+            // 
+            buttonDislike.Anchor = AnchorStyles.None;
+            buttonDislike.Location = new Point(556, 60);
+            buttonDislike.Name = "buttonDislike";
+            buttonDislike.Size = new Size(75, 23);
+            buttonDislike.TabIndex = 1;
+            buttonDislike.Text = "Dislike";
+            buttonDislike.UseVisualStyleBackColor = true;
+            // 
+            // buttonRandom
+            // 
+            buttonRandom.Anchor = AnchorStyles.None;
+            buttonRandom.Location = new Point(292, 60);
+            buttonRandom.Name = "buttonRandom";
+            buttonRandom.Size = new Size(75, 23);
+            buttonRandom.TabIndex = 2;
+            buttonRandom.Text = "Random";
+            buttonRandom.UseVisualStyleBackColor = true;
+            // 
+            // buttonDisableGenre
+            // 
+            buttonDisableGenre.Anchor = AnchorStyles.None;
+            buttonDisableGenre.Location = new Point(418, 60);
+            buttonDisableGenre.Name = "buttonDisableGenre";
+            buttonDisableGenre.Size = new Size(88, 23);
+            buttonDisableGenre.TabIndex = 3;
+            buttonDisableGenre.Text = "Disable Genre";
+            buttonDisableGenre.UseVisualStyleBackColor = true;
+            // 
+            // comboBoxGenres
+            // 
+            comboBoxGenres.Anchor = AnchorStyles.None;
+            comboBoxGenres.FormattingEnabled = true;
+            comboBoxGenres.Location = new Point(5, 60);
+            comboBoxGenres.Name = "comboBoxGenres";
+            comboBoxGenres.Size = new Size(121, 23);
+            comboBoxGenres.TabIndex = 4;
+            // 
+            // comboBoxRandomMode
+            // 
+            comboBoxRandomMode.Anchor = AnchorStyles.None;
+            comboBoxRandomMode.FormattingEnabled = true;
+            comboBoxRandomMode.Location = new Point(137, 60);
+            comboBoxRandomMode.Name = "comboBoxRandomMode";
+            comboBoxRandomMode.Size = new Size(121, 23);
+            comboBoxRandomMode.TabIndex = 5;
+            // 
+            // MainForm
+            // 
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(800, 450);
+            Controls.Add(tableLayoutPanelForm);
+            Name = "MainForm";
+            Text = "Player - genre name - sub genre name";
+            tableLayoutPanelForm.ResumeLayout(false);
+            tableLayoutPanelForm.PerformLayout();
+            tableLayoutPanelGenresOperations.ResumeLayout(false);
+            tableLayouTrackOperations.ResumeLayout(false);
+            tableLayouTrackOperations.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)trackBarVolume).EndInit();
+            ResumeLayout(false);
         }
 
         #endregion
+
+        private TableLayoutPanel tableLayoutPanelForm;
+        private Label labelTrackName;
+        private TableLayoutPanel tableLayoutPanelGenresOperations;
+        private TableLayoutPanel tableLayouTrackOperations;
+        private Button buttonPlay;
+        private TrackBar trackBarVolume;
+        private Button buttonLike;
+        private Button buttonDislike;
+        private Button buttonRandom;
+        private Button buttonDisableGenre;
+        private ComboBox comboBoxGenres;
+        private ComboBox comboBoxRandomMode;
     }
 }
