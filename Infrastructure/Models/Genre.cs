@@ -6,6 +6,7 @@ public class Genre
     public required string Key {  get; set; }
     public string? Name { get; set; }
     public string? MainName { get; set; }
+    public string? MainGenreKey { get; set; }
     public required bool IsAvailable { get; set; }
     public bool? IsDisabled { get; set; }
     public bool? IsSkip { get; set; }

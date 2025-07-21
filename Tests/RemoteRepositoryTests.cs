@@ -13,13 +13,13 @@ internal class RemoteRepositoryTests
     }
 
     [Test]
-    public void GetGenres_ReturnGenres()
+    public async Task GetGenres_ReturnGenres()
     {
         var capricePageServiceMock = new Mock<CapricePageService>();
 
         IRemoteRepository service = new CapriceRepository(capricePageServiceMock.Object);
         
-        var result = service.GetGenres();
+        var result = await service.GetGenres();
 
         Assert.That(result, Is.Not.Empty);
     }

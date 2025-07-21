@@ -125,6 +125,16 @@ internal class CapricePageServiceTests
     }
 
     [Test]
+    public void GetMainGenreKey_ShouldEqualeStr()
+    {
+        var service = new CapricePageService();
+
+        var mainGenreKey = service.GetMainGenreKey(_mainGenreTableMock);
+
+        Assert.That(mainGenreKey, Is.EqualTo("ethnic-d"));
+    }
+
+    [Test]
     public void GetSubGenresLinks_ShouldNotThrow()
     {
         var service = new CapricePageService();

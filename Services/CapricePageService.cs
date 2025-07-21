@@ -1,14 +1,13 @@
 ﻿using HtmlAgilityPack;
 using Infrastructure.Constants;
+using Infrastructure.Interfaces;
 using Infrastructure.Models;
-using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace Services;
 
-public partial class CapricePageService
+public partial class CapricePageService: IRemoteService
 {
     [GeneratedRegex(@"file:\[(\S*)]}\);")]
     private static partial Regex SearchPlayerJsParams();
@@ -39,6 +38,16 @@ public partial class CapricePageService
     public string GetMainGenreName(HtmlNode mainGenreTable)
     {
         return mainGenreTable.InnerText.Trim();
+    }
+
+    public string GetMainGenreKey(HtmlNode mainGenreTable)
+    {
+        var linkNode = mainGenreTable.SelectSingleNode(".//a[@href]")
+            ?? throw new Exception("Genre link not found!");
+
+        var href = linkNode.GetAttributeValue("href", string.Empty);
+
+        return href.Split("/").Last().Replace(".html", "");
     }
 
     public List<(string genreName, string url)> GetSubGenresLinks(HtmlNode genreTable)
@@ -135,6 +144,7 @@ public partial class CapricePageService
         {
             var mainGenreTable = SearchMainGenreTable(genreTable);
             var mainGenreName = GetMainGenreName(mainGenreTable);
+            var mainGenreKey = GetMainGenreKey(mainGenreTable);
             var subGenresLinks = GetSubGenresLinks(genreTable);
 
             foreach(var subGenresLink in subGenresLinks)
@@ -153,6 +163,7 @@ public partial class CapricePageService
                     Key = genreKey,
                     Name = subGenresLink.genreName,
                     MainName = mainGenreName,
+                    MainGenreKey = mainGenreKey,
                     IsAvailable = true,
                     RemoteSources = remoteSources,
                 });

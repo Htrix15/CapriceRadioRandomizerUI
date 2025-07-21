@@ -1,14 +1,13 @@
 ﻿using Infrastructure.Interfaces;
 using Infrastructure.Models;
-using Services;
 
 namespace Repositories;
 
-public class CapriceRepository(CapricePageService capricePageService) : IRemoteRepository
+public class CapriceRepository(IRemoteService remoteService) : IRemoteRepository
 {
-    public Task<List<Genre>> GetGenres()
+    public async Task<List<Genre>> GetGenres()
     {
-        throw new NotImplementedException();
+        return await remoteService.CreateGenres();
     }
 
     public Task FillingGenres(List<Genre> genres)
