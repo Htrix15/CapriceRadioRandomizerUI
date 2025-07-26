@@ -1,7 +1,7 @@
 ﻿using Infrastructure.Interfaces;
 using Infrastructure.Models;
 
-namespace Repositories;
+namespace Db;
 
 public class DbRepository : IGenreRepository
 {

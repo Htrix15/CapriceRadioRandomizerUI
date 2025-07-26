@@ -1,11 +1,11 @@
-﻿using HtmlAgilityPack;
+﻿using Caprice;
+using HtmlAgilityPack;
 using Infrastructure.Constants;
 using Infrastructure.Models;
-using Services;
 
-namespace Tests;
+namespace Tests.Caprice;
 
-internal class CapricePageServiceTests
+internal class PageServiceTests
 {
     private HtmlDocument _mainPageMock;
     private HtmlDocument _genrePageMock;
@@ -83,7 +83,7 @@ internal class CapricePageServiceTests
     [Test]
     public async Task GetPage_ShouldNotThrow()
     {
-        var service = new CapricePageService();
+        var service = new PageService();
 
         Assert.DoesNotThrowAsync(async () => await service.GetPage(CapricePageConstants.MainPagehUrl));
     }
@@ -91,7 +91,7 @@ internal class CapricePageServiceTests
     [Test]
     public async Task SearchGenresTables_ShouldNotThrow()
     {
-        var service = new CapricePageService();
+        var service = new PageService();
 
         Assert.DoesNotThrow(() => service.SearchGenresTables(_mainPageMock));
     }
@@ -99,7 +99,7 @@ internal class CapricePageServiceTests
     [Test]
     public void SearchGenresTables_ShouldReturn3Table()
     {
-        var service = new CapricePageService();
+        var service = new PageService();
 
         var result = service.SearchGenresTables(_mainPageMock);
 
@@ -109,7 +109,7 @@ internal class CapricePageServiceTests
     [Test]
     public void SearchMainGenreTable_ShouldNotThrow()
     {
-        var service = new CapricePageService();
+        var service = new PageService();
 
         Assert.DoesNotThrow(() => service.SearchMainGenreTable(_genresTableMock));
     }
@@ -117,7 +117,7 @@ internal class CapricePageServiceTests
     [Test]
     public void GetMainGenreTableName_ShouldEqualeStr()
     {
-        var service = new CapricePageService();
+        var service = new PageService();
 
         var mainGenreName = service.GetMainGenreName(_mainGenreTableMock);
 
@@ -127,7 +127,7 @@ internal class CapricePageServiceTests
     [Test]
     public void GetMainGenreKey_ShouldEqualeStr()
     {
-        var service = new CapricePageService();
+        var service = new PageService();
 
         var mainGenreKey = service.GetMainGenreKey(_mainGenreTableMock);
 
@@ -137,7 +137,7 @@ internal class CapricePageServiceTests
     [Test]
     public void GetSubGenresLinks_ShouldNotThrow()
     {
-        var service = new CapricePageService();
+        var service = new PageService();
 
         Assert.DoesNotThrow(() => service.GetSubGenresLinks(_genresTableMock));
     }
@@ -145,7 +145,7 @@ internal class CapricePageServiceTests
     [Test]
     public void GetSubGenresLinks_ShouldReturnExpectedResult()
     {
-        var service = new CapricePageService();
+        var service = new PageService();
 
         List<(string genreName, string url)> expected = [
             ("INDIAN CLASSICAL/FOLK/ETHNIC", "http://radcap.ru/indian.html"),
@@ -161,7 +161,7 @@ internal class CapricePageServiceTests
     [Test]
     public void SearchPlayerJsScript_ShouldNotThrow()
     {
-        var service = new CapricePageService();
+        var service = new PageService();
 
         Assert.DoesNotThrow(() => service.SearchPlayerJsScript(_genrePageMock));
     }
@@ -169,7 +169,7 @@ internal class CapricePageServiceTests
     [Test]
     public void GetTitleFilePairFromPlayerJsScript_ShouldNotThrow()
     {
-        var service = new CapricePageService();
+        var service = new PageService();
 
         Assert.DoesNotThrow(() => service.GetPlayerJsScriptParamsStr(_playerScriptMock));
     }
@@ -177,7 +177,7 @@ internal class CapricePageServiceTests
     [Test]
     public void GetTitleFilePairFromPlayerJsScript_ShouldReturnExpectedResult()
     {
-        var service = new CapricePageService();
+        var service = new PageService();
 
         var expected = _jsPlayerParamsStrMoc;
         var actual = service.GetPlayerJsScriptParamsStr(_playerScriptMock);
@@ -188,7 +188,7 @@ internal class CapricePageServiceTests
     [Test]
     public void SplitePlayerJsScriptParams_ShouldNotThrow()
     {
-        var service = new CapricePageService();
+        var service = new PageService();
 
         Assert.DoesNotThrow(() => service.SplitePlayerJsScriptParams(_jsPlayerParamsStrMoc));
     }
@@ -196,7 +196,7 @@ internal class CapricePageServiceTests
     [Test]
     public void SplitePlayerJsScriptParams_ShouldReturnExpectedResult()
     {
-        var service = new CapricePageService();
+        var service = new PageService();
 
         var expected = _jsPlayerParamsJsonsMoc;
 
@@ -208,7 +208,7 @@ internal class CapricePageServiceTests
     [Test]
     public void ExtractPlayerJsScriptParamsValues_ShouldReturnExpectedResult()
     {
-        var service = new CapricePageService();
+        var service = new PageService();
 
         var expected = _jsPlayerParamsMoc;
 
@@ -221,7 +221,7 @@ internal class CapricePageServiceTests
     [Test]
     public void GetGenreKey_ShouldReturnExpectedResult()
     {
-        var service = new CapricePageService();
+        var service = new PageService();
 
         var expected = "indianfolk";
 
@@ -233,7 +233,7 @@ internal class CapricePageServiceTests
     [Test]
     public void CreateSubGenreLink_ShouldReturnExpectedResult()
     {
-        var service = new CapricePageService();
+        var service = new PageService();
 
         var expected = "http://radcap.ru/indianfolk";
 
@@ -245,7 +245,7 @@ internal class CapricePageServiceTests
     [Test]
     public void CreateSubGenreLink_WithoutReplace_ShouldReturnExpectedResult()
     {
-        var service = new CapricePageService();
+        var service = new PageService();
 
         var expected = "http://radcap.ru/indianfolk";
 
@@ -257,7 +257,7 @@ internal class CapricePageServiceTests
     [Test]
     public void CreateRemoteSourcesFromJsParams_ShouldReturnExpectedResult()
     {
-        var service = new CapricePageService();
+        var service = new PageService();
 
         var expected = new RemoteSources() { 
             PlayLink = "//79.111.14.76:8002/indianfolk" , 
@@ -277,7 +277,7 @@ internal class CapricePageServiceTests
     [Test]
     public async Task CreateGenres_ShouldReturn10Genre()
     {
-        var service = new CapricePageService();
+        var service = new PageService();
 
         var result = await service.CreateGenres(_mainPageMock);
 
@@ -287,7 +287,7 @@ internal class CapricePageServiceTests
     [Test]
     public async Task CreateGenres_ShouldNotThrow()
     {
-        var service = new CapricePageService();
+        var service = new PageService();
 
         Assert.DoesNotThrowAsync(async () => await service.CreateGenres());
     }

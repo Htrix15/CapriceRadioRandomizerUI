@@ -1,9 +1,9 @@
 ﻿using Infrastructure.Interfaces;
 using Infrastructure.Models;
 
-namespace Repositories;
+namespace Caprice;
 
-public class CapriceRepository(IRemoteService remoteService) : IRemoteRepository
+public class Repository(IRemoteService remoteService) : IRemoteRepository
 {
     public async Task<List<Genre>> GetGenres()
     {

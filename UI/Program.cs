@@ -1,8 +1,6 @@
 using Infrastructure.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using Players;
-using Repositories;
-using Services;
 
 namespace UI
 {
@@ -28,9 +26,9 @@ namespace UI
         private static void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<IPlayer, PlayerService>();
-            services.AddSingleton<IGenreRepository, DbRepository>();
-            services.AddSingleton<IRemoteRepository, CapriceRepository>();
-            services.AddSingleton<IRemoteService, CapricePageService>();
+            services.AddSingleton<IGenreRepository, Db.Repository>();
+            services.AddSingleton<IRemoteRepository, Caprice.Repository>();
+            services.AddSingleton<IRemoteService, Caprice.PageService>();
 
             services.AddTransient<MainForm>();
         }
