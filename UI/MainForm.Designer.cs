@@ -31,15 +31,15 @@
             tableLayoutPanelForm = new TableLayoutPanel();
             labelTrackName = new Label();
             tableLayoutPanelGenresOperations = new TableLayoutPanel();
-            tableLayouTrackOperations = new TableLayoutPanel();
-            buttonPlay = new Button();
-            trackBarVolume = new TrackBar();
             buttonLike = new Button();
             buttonDislike = new Button();
-            buttonRandom = new Button();
-            buttonDisableGenre = new Button();
             comboBoxGenres = new ComboBox();
             comboBoxRandomMode = new ComboBox();
+            buttonRandom = new Button();
+            buttonDisableGenre = new Button();
+            tableLayouTrackOperations = new TableLayoutPanel();
+            buttonStartStop = new Button();
+            trackBarVolume = new TrackBar();
             tableLayoutPanelForm.SuspendLayout();
             tableLayoutPanelGenresOperations.SuspendLayout();
             tableLayouTrackOperations.SuspendLayout();
@@ -96,39 +96,6 @@
             tableLayoutPanelGenresOperations.Size = new Size(794, 143);
             tableLayoutPanelGenresOperations.TabIndex = 1;
             // 
-            // tableLayouTrackOperations
-            // 
-            tableLayouTrackOperations.ColumnCount = 2;
-            tableLayouTrackOperations.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            tableLayouTrackOperations.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            tableLayouTrackOperations.Controls.Add(buttonPlay, 1, 0);
-            tableLayouTrackOperations.Controls.Add(trackBarVolume, 0, 0);
-            tableLayouTrackOperations.Dock = DockStyle.Fill;
-            tableLayouTrackOperations.Location = new Point(3, 301);
-            tableLayouTrackOperations.Name = "tableLayouTrackOperations";
-            tableLayouTrackOperations.RowCount = 1;
-            tableLayouTrackOperations.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            tableLayouTrackOperations.Size = new Size(794, 146);
-            tableLayouTrackOperations.TabIndex = 2;
-            // 
-            // buttonPlay
-            // 
-            buttonPlay.Anchor = AnchorStyles.None;
-            buttonPlay.Location = new Point(558, 61);
-            buttonPlay.Name = "buttonPlay";
-            buttonPlay.Size = new Size(75, 23);
-            buttonPlay.TabIndex = 0;
-            buttonPlay.Text = "Play\\Stop";
-            buttonPlay.UseVisualStyleBackColor = true;
-            // 
-            // trackBarVolume
-            // 
-            trackBarVolume.Anchor = AnchorStyles.None;
-            trackBarVolume.Location = new Point(146, 50);
-            trackBarVolume.Name = "trackBarVolume";
-            trackBarVolume.Size = new Size(104, 45);
-            trackBarVolume.TabIndex = 1;
-            // 
             // buttonLike
             // 
             buttonLike.Anchor = AnchorStyles.None;
@@ -148,6 +115,24 @@
             buttonDislike.TabIndex = 1;
             buttonDislike.Text = "Dislike";
             buttonDislike.UseVisualStyleBackColor = true;
+            // 
+            // comboBoxGenres
+            // 
+            comboBoxGenres.Anchor = AnchorStyles.None;
+            comboBoxGenres.FormattingEnabled = true;
+            comboBoxGenres.Location = new Point(5, 60);
+            comboBoxGenres.Name = "comboBoxGenres";
+            comboBoxGenres.Size = new Size(121, 23);
+            comboBoxGenres.TabIndex = 4;
+            // 
+            // comboBoxRandomMode
+            // 
+            comboBoxRandomMode.Anchor = AnchorStyles.None;
+            comboBoxRandomMode.FormattingEnabled = true;
+            comboBoxRandomMode.Location = new Point(137, 60);
+            comboBoxRandomMode.Name = "comboBoxRandomMode";
+            comboBoxRandomMode.Size = new Size(121, 23);
+            comboBoxRandomMode.TabIndex = 5;
             // 
             // buttonRandom
             // 
@@ -169,23 +154,42 @@
             buttonDisableGenre.Text = "Disable Genre";
             buttonDisableGenre.UseVisualStyleBackColor = true;
             // 
-            // comboBoxGenres
+            // tableLayouTrackOperations
             // 
-            comboBoxGenres.Anchor = AnchorStyles.None;
-            comboBoxGenres.FormattingEnabled = true;
-            comboBoxGenres.Location = new Point(5, 60);
-            comboBoxGenres.Name = "comboBoxGenres";
-            comboBoxGenres.Size = new Size(121, 23);
-            comboBoxGenres.TabIndex = 4;
+            tableLayouTrackOperations.ColumnCount = 2;
+            tableLayouTrackOperations.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayouTrackOperations.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayouTrackOperations.Controls.Add(buttonStartStop, 1, 0);
+            tableLayouTrackOperations.Controls.Add(trackBarVolume, 0, 0);
+            tableLayouTrackOperations.Dock = DockStyle.Fill;
+            tableLayouTrackOperations.Location = new Point(3, 301);
+            tableLayouTrackOperations.Name = "tableLayouTrackOperations";
+            tableLayouTrackOperations.RowCount = 1;
+            tableLayouTrackOperations.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            tableLayouTrackOperations.Size = new Size(794, 146);
+            tableLayouTrackOperations.TabIndex = 2;
             // 
-            // comboBoxRandomMode
+            // buttonStartStop
             // 
-            comboBoxRandomMode.Anchor = AnchorStyles.None;
-            comboBoxRandomMode.FormattingEnabled = true;
-            comboBoxRandomMode.Location = new Point(137, 60);
-            comboBoxRandomMode.Name = "comboBoxRandomMode";
-            comboBoxRandomMode.Size = new Size(121, 23);
-            comboBoxRandomMode.TabIndex = 5;
+            buttonStartStop.Anchor = AnchorStyles.None;
+            buttonStartStop.Location = new Point(558, 61);
+            buttonStartStop.Name = "buttonStartStop";
+            buttonStartStop.Size = new Size(75, 23);
+            buttonStartStop.TabIndex = 0;
+            buttonStartStop.Text = "Play\\Stop";
+            buttonStartStop.UseVisualStyleBackColor = true;
+            buttonStartStop.Click += buttonStartStop_Click;
+            // 
+            // trackBarVolume
+            // 
+            trackBarVolume.Anchor = AnchorStyles.None;
+            trackBarVolume.Location = new Point(27, 50);
+            trackBarVolume.Maximum = 100;
+            trackBarVolume.Name = "trackBarVolume";
+            trackBarVolume.Size = new Size(342, 45);
+            trackBarVolume.TabIndex = 1;
+            trackBarVolume.Value = 50;
+            trackBarVolume.Scroll += trackBarVolume_Scroll;
             // 
             // MainForm
             // 
@@ -210,7 +214,7 @@
         private Label labelTrackName;
         private TableLayoutPanel tableLayoutPanelGenresOperations;
         private TableLayoutPanel tableLayouTrackOperations;
-        private Button buttonPlay;
+        private Button buttonStartStop;
         private TrackBar trackBarVolume;
         private Button buttonLike;
         private Button buttonDislike;

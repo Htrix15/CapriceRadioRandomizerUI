@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <PackageReference Include="coverlet.collector" Version="6.0.2" />
+    <PackageReference Include="HtmlAgilityPack" Version="1.12.2" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
     <PackageReference Include="Moq" Version="4.20.72" />
     <PackageReference Include="NUnit" Version="4.2.2" />
@@ -18,8 +19,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Caprice\Caprice.csproj" />
     <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
-    <ProjectReference Include="..\Repositories\Repositories.csproj" />
+    <ProjectReference Include="..\Player\Players.csproj" />
+    <ProjectReference Include="..\Repositories\Db.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -27,19 +30,19 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="TestHtmls\GenrePage.html">
+    <None Update="Caprice\TestHtmls\GenrePage.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="TestHtmls\GenresTable.html">
+    <None Update="Caprice\TestHtmls\GenresTable.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="TestHtmls\MainGenreTable.html">
+    <None Update="Caprice\TestHtmls\MainGenreTable.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="TestHtmls\MainPage.html">
+    <None Update="Caprice\TestHtmls\MainPage.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="TestHtmls\PlayerScript.html">
+    <None Update="Caprice\TestHtmls\PlayerScript.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

@@ -25,7 +25,7 @@ namespace UI
         }
         private static void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<IPlayer, PlayerService>();
+            services.AddSingleton<IUrlPlayer, UrlPlayer>();
             services.AddSingleton<IGenreRepository, Db.Repository>();
             services.AddSingleton<IRemoteRepository, Caprice.Repository>();
             services.AddSingleton<IRemoteService, Caprice.PageService>();

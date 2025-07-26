@@ -3,7 +3,7 @@ using Infrastructure.Models;
 
 namespace Db;
 
-public class DbRepository : IGenreRepository
+public class Repository : IGenreRepository
 {
     public Task AddGenres(List<Genre> genres)
     {
