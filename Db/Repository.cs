@@ -12,56 +12,43 @@ public class Repository(IApplicationDbContext dbContext) : IGenreRepository
         await dbContext.SaveChangesAsync();
     }
 
-    public Task ChangeRating(string genreKey, int rating)
+    public async Task ChangeRating(string genreKey, int rating)
     {
-        throw new NotImplementedException();
+        var updatedGenre = await dbContext.Genres.FindAsync(genreKey);
+        updatedGenre!.Rating += rating;
+        updatedGenre.RatingCount++;
+        await dbContext.SaveChangesAsync();
     }
 
-    public Task GenresIsAvailable(List<Genre> genres)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task GenresIsDisabled(List<Genre> genres)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task GenresIsEnabled(List<Genre> genres)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task GenresIsNotAvailable(List<Genre> genres)
-    {
-        throw new NotImplementedException();
-    }
-
-    public async Task<List<Genre>> GetAllGenres()
+    public async Task<List<Genre>> GetAllActiveGenres()
     {
         return await dbContext.Genres
             .AsNoTracking()
+            .Where(g => g.IsAvailable 
+                && !g.IsDisabled
+                && !g.IsSkip)
             .Include(g => g.RemoteSources)
             .ToListAsync();
     }
 
-    public Task IncreaseTrackCount(string genreKey)
+    public async Task IncreaseTrackCount(string genreKey)
     {
-        throw new NotImplementedException();
+        var updatedGenre = await dbContext.Genres.FindAsync(genreKey);
+        updatedGenre!.TrackCount++;
+        await dbContext.SaveChangesAsync();
     }
 
-    public Task Init()
+    public async Task SkipGenre(string genreKey)
     {
-        throw new NotImplementedException();
+        var updatedGenre = await dbContext.Genres.FindAsync(genreKey);
+        updatedGenre!.IsSkip = true;
+        await dbContext.SaveChangesAsync();
     }
 
-    public Task<bool> IsExist()
+    public async Task DisableGenre(string genreKey)
     {
-        throw new NotImplementedException();
-    }
-
-    public Task RemoveGenres(List<Genre> genres)
-    {
-        throw new NotImplementedException();
+        var updatedGenre = await dbContext.Genres.FindAsync(genreKey);
+        updatedGenre!.IsDisabled = true;
+        await dbContext.SaveChangesAsync();
     }
 }

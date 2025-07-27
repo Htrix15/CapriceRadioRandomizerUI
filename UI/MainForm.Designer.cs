@@ -105,6 +105,7 @@
             buttonLike.TabIndex = 0;
             buttonLike.Text = "Like";
             buttonLike.UseVisualStyleBackColor = true;
+            buttonLike.Click += buttonLike_Click;
             // 
             // buttonDislike
             // 
@@ -115,6 +116,7 @@
             buttonDislike.TabIndex = 1;
             buttonDislike.Text = "Dislike";
             buttonDislike.UseVisualStyleBackColor = true;
+            buttonDislike.Click += buttonDislike_Click;
             // 
             // comboBoxGenres
             // 
@@ -124,6 +126,7 @@
             comboBoxGenres.Name = "comboBoxGenres";
             comboBoxGenres.Size = new Size(121, 23);
             comboBoxGenres.TabIndex = 4;
+            comboBoxGenres.SelectedIndexChanged += comboBoxGenres_SelectedIndexChanged;
             // 
             // comboBoxRandomMode
             // 
@@ -133,6 +136,7 @@
             comboBoxRandomMode.Name = "comboBoxRandomMode";
             comboBoxRandomMode.Size = new Size(121, 23);
             comboBoxRandomMode.TabIndex = 5;
+            comboBoxRandomMode.SelectedIndexChanged += comboBoxRandomMode_SelectedIndexChanged;
             // 
             // buttonRandom
             // 
@@ -143,6 +147,7 @@
             buttonRandom.TabIndex = 2;
             buttonRandom.Text = "Random";
             buttonRandom.UseVisualStyleBackColor = true;
+            buttonRandom.Click += buttonRandom_Click;
             // 
             // buttonDisableGenre
             // 
@@ -153,6 +158,7 @@
             buttonDisableGenre.TabIndex = 3;
             buttonDisableGenre.Text = "Disable Genre";
             buttonDisableGenre.UseVisualStyleBackColor = true;
+            buttonDisableGenre.Click += buttonDisableGenre_Click;
             // 
             // tableLayouTrackOperations
             // 

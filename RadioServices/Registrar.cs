@@ -15,5 +15,6 @@ public static class Registrar
         collection.AddSingleton<IRemoteRepository, Caprice.Repository>();
         collection.AddSingleton<IRemoteService, Caprice.PageService>();
         collection.AddSingleton<IPageService, Caprice.PageService>();
+        collection.AddSingleton<IRandomGenreService, RandomGenreService>();
     }
 }

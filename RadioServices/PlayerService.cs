@@ -1,6 +1,5 @@
 ﻿using Infrastructure.Enums;
 using Infrastructure.Interfaces;
-using Infrastructure.Models;
 using System.Runtime.CompilerServices;
 
 namespace RadioServices;
@@ -15,12 +14,12 @@ public class PlayerService(IRemoteRepository remoteRepository,
         player.ChangeVolume(volume);
     }
 
-    public async IAsyncEnumerable<string> LoopUpdateTrackName([EnumeratorCancellation] CancellationToken _trackPlayingToken)
+    public async IAsyncEnumerable<string> LoopUpdateTrackName(string playLink, [EnumeratorCancellation] CancellationToken _trackPlayingToken)
     {
    
         while (!_trackPlayingToken.IsCancellationRequested)
         {
-            var trackInfo = await remoteRepository.GetTrackInfo("http://79.111.14.76:8000/status.xsl?mount=/indianfolk");//Tested url
+            var trackInfo = await remoteRepository.GetTrackInfo(playLink);
             yield return trackInfo.Name;
             await Task.Delay(UpdateTrakeNameLoopTimeSec, _trackPlayingToken);
         }
@@ -28,7 +27,7 @@ public class PlayerService(IRemoteRepository remoteRepository,
 
     public TrackState PlayTrack(string playLink)
     {
-        player.PlayTrack("http://79.111.14.76:8002/indianfolk");//Tested url
+        player.PlayTrack(playLink);
         return player.GetTrackState();
     }
 

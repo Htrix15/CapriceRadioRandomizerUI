@@ -19,20 +19,56 @@ public class GenreLibraryService(IRemoteRepository remoteRepository,
         remoteGenres.ForEach(g => g.ParentGenre = null);
         await genreRepository.AddGenres(remoteGenres!);
 
-        remoteGenres.ForEach(g => g.ParentGenre = parentGenres.FirstOrDefault(pg => pg.Key == g.ParentGenreKey));
+        remoteGenres.ForEach(g => g.ParentGenre = parentGenres.First(pg => pg.Key == g.ParentGenreKey));
 
-        return remoteGenres;
+        return [..parentGenres, ..remoteGenres];
     }
 
     public async Task<List<Genre>> GetGenres()
     {
-        var dbGenres = await genreRepository.GetAllGenres();
+        var genres = await genreRepository.GetAllActiveGenres();
         
-        if (dbGenres.Count == 0)
+        if (genres.Count == 0)
         {
-            dbGenres = await CreateNewGenres();
+            genres = await CreateNewGenres();
         }
 
-        return dbGenres;
+        var perantGenres = genres.Where(g => g.ItIsParent).ToList();
+
+        foreach (var perantGenre in perantGenres)
+        {
+            perantGenre.SubGenres = genres.Where(g => g.ParentGenreKey == perantGenre.Key).ToList();
+        }
+
+        return perantGenres;
+    }
+
+    public async Task SkipGenre(Genre perent, Genre subGenre)
+    {
+        await genreRepository.SkipGenre(subGenre.Key);
+        subGenre.IsSkip = true;
+
+        perent.SubGenres = [.. perent.SubGenres!.Where(sg => !sg.IsSkip)];
+
+        if (perent.SubGenres!.All(sg => sg.IsSkip))
+        {
+            await genreRepository.SkipGenre(perent.Key);
+            perent.IsSkip = true;
+        }
+    }
+
+    public async Task IncreaseGenreTrackCount(string key)
+    {
+        await genreRepository.IncreaseTrackCount(key);
+    }
+
+    public async Task ChangeRating(string genreKey, int rating)
+    {
+        await genreRepository.ChangeRating(genreKey, rating);
+    }
+
+    public async Task DisableGenre(string key)
+    {
+        await genreRepository.DisableGenre(key);
     }
 }
