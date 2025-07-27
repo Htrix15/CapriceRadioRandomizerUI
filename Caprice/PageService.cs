@@ -119,14 +119,17 @@ public partial class PageService: IPageService, IRemoteService
         return jsParams.First().file.Split("/").Last();
     }
 
+    private string CheckAndAddProtocol(string link, string protocol = "http") => link.StartsWith("//") ? $"{protocol}:{link}" : link;
+
     public RemoteSources CreateRemoteSourcesFromJsParams(List<(string title, string file)> jsParams)
     {
         var trackInfoBaseLink = jsParams.First(p => p.title == "2").file;
         var key = GetGenreKey(jsParams);
-        trackInfoBaseLink = trackInfoBaseLink.Replace(key, $"status.xsl?mount=/{key}");
+        trackInfoBaseLink = CheckAndAddProtocol(trackInfoBaseLink.Replace(key, $"status.xsl?mount=/{key}"));
 
         return new RemoteSources() { 
-            PlayLink = jsParams.First(p => p.title == "1").file,
+            Key = key,
+            PlayLink = CheckAndAddProtocol(jsParams.First(p => p.title == "1").file),
             TrackInfoBaseLink = trackInfoBaseLink,
         };
     }
@@ -156,14 +159,33 @@ public partial class PageService: IPageService, IRemoteService
                 var jsScriptParamsValues = ExtractPlayerJsScriptParamsValues(jsScriptParams);
                 var genreKey = GetGenreKey(jsScriptParamsValues);
                 var remoteSources = CreateRemoteSourcesFromJsParams(jsScriptParamsValues);
+                remoteSources.Key = genreKey;
 
                 result.Add(new Genre()
                 {
                     Key = genreKey,
                     Name = subGenresLink.genreName,
-                    MainName = mainGenreName,
-                    MainGenreKey = mainGenreKey,
+                    ItIsParent = false,
+                    ParentGenreKey = mainGenreKey,
+                    ParentGenre = new Genre()
+                    {
+                        Key = mainGenreKey,
+                        Name = mainGenreName,
+                        ItIsParent = true,
+                        IsAvailable = true,
+                        IsDisabled = false,
+                        IsSkip = false,
+                        TrackCount = 0,
+                        RatingCount = 0,
+                        Rating = 0,
+
+                    },
                     IsAvailable = true,
+                    IsDisabled = false,
+                    IsSkip = false,
+                    TrackCount = 0,
+                    RatingCount = 0,
+                    Rating = 0,
                     RemoteSources = remoteSources,
                 });
             }

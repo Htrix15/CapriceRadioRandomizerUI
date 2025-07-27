@@ -259,8 +259,9 @@ internal class PageServiceTests
         var service = new PageService();
 
         var expected = new RemoteSources() { 
-            PlayLink = "//79.111.14.76:8002/indianfolk" , 
-            TrackInfoBaseLink = "//79.111.14.76:8000/status.xsl?mount=/indianfolk" 
+            Key = "indianfolk",
+            PlayLink = "http://79.111.14.76:8002/indianfolk", 
+            TrackInfoBaseLink = "http://79.111.14.76:8000/status.xsl?mount=/indianfolk"
         };
 
         var actual = service.CreateRemoteSourcesFromJsParams(_jsPlayerParamsMoc);

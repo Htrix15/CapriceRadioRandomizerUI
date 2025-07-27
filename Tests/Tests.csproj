@@ -21,8 +21,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Caprice\Caprice.csproj" />
     <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
-    <ProjectReference Include="..\Player\Players.csproj" />
-    <ProjectReference Include="..\Repositories\Db.csproj" />
+    <ProjectReference Include="..\Players\Players.csproj" />
   </ItemGroup>
 
   <ItemGroup>

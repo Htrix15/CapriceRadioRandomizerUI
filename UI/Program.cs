@@ -1,6 +1,5 @@
-using Infrastructure.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
-using Players;
+using RadioServices;
 
 namespace UI
 {
@@ -25,11 +24,7 @@ namespace UI
         }
         private static void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<IUrlPlayer, UrlPlayer>();
-            services.AddSingleton<IGenreRepository, Db.Repository>();
-            services.AddSingleton<IRemoteRepository, Caprice.Repository>();
-            services.AddSingleton<IRemoteService, Caprice.PageService>();
-            services.AddSingleton<IPageService, Caprice.PageService>();
+            services.RegistrationServices();
             services.AddTransient<MainForm>();
         }
     }

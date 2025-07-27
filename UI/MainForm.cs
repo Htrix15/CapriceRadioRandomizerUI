@@ -5,59 +5,57 @@ namespace UI;
 
 public partial class MainForm : Form
 {
-    private readonly IUrlPlayer _player;
-    private readonly IGenreRepository _genreRepository;
-    private readonly IRemoteRepository _remoteRepository;
+    private readonly IPlayerService _playerService;
+    private readonly IGenreLibraryService _genreLibraryService;
     private TrackState _trackState = TrackState.Absent;
     private CancellationTokenSource _trackPlayingToken;
-    private const int UpdateTrakeNameLoopTimeSec = 3000;
 
-    public MainForm(IUrlPlayer player,
-        IGenreRepository genreRepository,
-        IRemoteRepository remoteRepository)
+    public MainForm(IPlayerService playerService, IGenreLibraryService genreLibraryService)
     {
-        _player = player;
-        _genreRepository = genreRepository;
-        _remoteRepository = remoteRepository;
+        _playerService = playerService;
+        _genreLibraryService = genreLibraryService;
         InitializeComponent();
+
     }
 
     private async void buttonStartStop_Click(object sender, EventArgs e)
     {
         if (_trackState == TrackState.Absent || _trackState == TrackState.Stopped)
         {
-            _player.PlayTrack("http://79.111.14.76:8002/indianfolk");//Tested url
-            _trackState = _player.GetTrackState();
+            _trackState = _playerService.PlayTrack("http://79.111.14.76:8002/indianfolk");
             _trackPlayingToken = new CancellationTokenSource();
             await LoopUpdateTrackName(_trackPlayingToken.Token);
         }
         else
         {
             _trackPlayingToken?.Cancel();
-            _player.StopTrack();
-            _trackState = TrackState.Stopped;
+            _trackState = _playerService.StopTrack();
         }
     }
 
     private void trackBarVolume_Scroll(object sender, EventArgs e)
     {
         var volume = trackBarVolume.Value / 100f;
-        _player.ChangeVolume(volume);
+        _playerService.ChangeVolume(volume);
     }
 
-    private async Task LoopUpdateTrackName(CancellationToken _trackPlayingToken)
+    private async Task LoopUpdateTrackName(CancellationToken token)
     {
         try
         {
-            while (!_trackPlayingToken.IsCancellationRequested)
+            await foreach (var trackName in _playerService.LoopUpdateTrackName(token))
             {
-                var trackInfo = await _remoteRepository.GetTrackInfo("http://79.111.14.76:8000/status.xsl?mount=/indianfolk");//Tested url
-                labelTrackName.Text = trackInfo.Name;
-                await Task.Delay(UpdateTrakeNameLoopTimeSec, _trackPlayingToken);
+                labelTrackName.Text = trackName;
             }
         }
-        catch (OperationCanceledException) {
+        catch (OperationCanceledException)
+        {
             labelTrackName.Text = "";
         }
+    }
+
+    private async void MainForm_Load(object sender, EventArgs e)
+    {
+        await _genreLibraryService.GetGenres();
     }
 }

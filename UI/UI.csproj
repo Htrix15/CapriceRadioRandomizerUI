@@ -9,15 +9,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.7">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.7" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.7" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Caprice\Caprice.csproj" />
-    <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
-    <ProjectReference Include="..\Player\Players.csproj" />
-    <ProjectReference Include="..\Repositories\Db.csproj" />
+    <ProjectReference Include="..\RadioServices\RadioServices.csproj" />
   </ItemGroup>
 
 </Project>
