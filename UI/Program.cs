@@ -29,7 +29,7 @@ namespace UI
             services.AddSingleton<IGenreRepository, Db.Repository>();
             services.AddSingleton<IRemoteRepository, Caprice.Repository>();
             services.AddSingleton<IRemoteService, Caprice.PageService>();
-
+            services.AddSingleton<IPageService, Caprice.PageService>();
             services.AddTransient<MainForm>();
         }
     }
