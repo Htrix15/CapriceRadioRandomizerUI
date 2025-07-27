@@ -174,7 +174,7 @@ public partial class PageService: IPageService, IRemoteService
 
     public string GetInnerTextByPath(HtmlDocument page, string path)
     {
-        var node = page.DocumentNode.SelectSingleNode(path) ?? throw new Exception($"Node by path {page} not found");
+        var node = page.DocumentNode.SelectSingleNode(path) ?? throw new Exception($"Node by path {path} not found");
         return node.InnerText;
     }
 }

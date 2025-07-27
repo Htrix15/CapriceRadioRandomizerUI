@@ -28,7 +28,7 @@ internal class RemoteRepositoryTests
     public async Task GetTrackInfo_TrackNameIsNotNullNotEmpty()
     {
         var capricePageServiceMock = new Mock<PageService>();
-        var trackInfoLink = "http://79.111.14.76:8000/status.xsl?mount=/darkwave";
+        var trackInfoLink = "http://79.111.14.76:8000/status.xsl?mount=/indianfolk";
 
         IRemoteRepository service = new Repository(capricePageServiceMock.Object,
             capricePageServiceMock.Object);
