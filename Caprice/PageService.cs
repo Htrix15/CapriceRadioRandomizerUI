@@ -1,5 +1,4 @@
 ﻿using HtmlAgilityPack;
-using Infrastructure.Constants;
 using Infrastructure.Interfaces;
 using Infrastructure.Models;
 using System.Text.Json;
@@ -7,7 +6,7 @@ using System.Text.RegularExpressions;
 
 namespace Caprice;
 
-public partial class PageService: IRemoteService
+public partial class PageService: IPageService, IRemoteService
 {
     [GeneratedRegex(@"file:\[(\S*)]}\);")]
     private static partial Regex SearchPlayerJsParams();
@@ -26,7 +25,7 @@ public partial class PageService: IRemoteService
 
     public HtmlNodeCollection SearchGenresTables(HtmlDocument mainPage)
     {
-        return mainPage.DocumentNode.SelectNodes($"//table[contains(@id, '{CapricePageConstants.GenreTableIdSubStr}')]") ?? throw new Exception("Genres tables not found!");
+        return mainPage.DocumentNode.SelectNodes($"//table[contains(@id, '{Constants.GenreTableIdSubStr}')]") ?? throw new Exception("Genres tables not found!");
     }
 
     public HtmlNode SearchMainGenreTable(HtmlNode genreTable)
@@ -68,9 +67,9 @@ public partial class PageService: IRemoteService
 
     public string CreateSubGenreLink(string link)
     {
-        return link.StartsWith(CapricePageConstants.RootPage, StringComparison.CurrentCultureIgnoreCase)
+        return link.StartsWith(Constants.RootPage, StringComparison.CurrentCultureIgnoreCase)
             ? link
-            : $"{CapricePageConstants.RootPage}/{link}";
+            : $"{Constants.RootPage}/{link}";
      }
 
     public HtmlNode SearchPlayerJsScript(HtmlDocument page)
@@ -132,7 +131,7 @@ public partial class PageService: IRemoteService
         };
     }
 
-    public async Task<List<Genre>> CreateGenres() => await CreateGenres(await GetPage(CapricePageConstants.MainPagehUrl));
+    public async Task<List<Genre>> CreateGenres() => await CreateGenres(await GetPage(Constants.MainPagehUrl));
 
     public async Task<List<Genre>> CreateGenres(HtmlDocument mainPage)
     {
@@ -171,5 +170,11 @@ public partial class PageService: IRemoteService
         }
 
         return result;
+    }
+
+    public string GetInnerTextByPath(HtmlDocument page, string path)
+    {
+        var node = page.DocumentNode.SelectSingleNode(path) ?? throw new Exception($"Node by path {page} not found");
+        return node.InnerText;
     }
 }

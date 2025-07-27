@@ -3,7 +3,8 @@ using Infrastructure.Models;
 
 namespace Caprice;
 
-public class Repository(IRemoteService remoteService) : IRemoteRepository
+public class Repository(IRemoteService remoteService,
+    IPageService pageService) : IRemoteRepository
 {
     public async Task<List<Genre>> GetGenres()
     {
@@ -15,8 +16,14 @@ public class Repository(IRemoteService remoteService) : IRemoteRepository
         throw new NotImplementedException();
     }
 
-    public TrackInfo GetTrackInfo(string trackInfoLink)
+
+    public async Task<TrackInfo> GetTrackInfo(string trackInfoLink)
     {
-        throw new NotImplementedException();
+        var pageWithTrackInfo = await pageService.GetPage(trackInfoLink);
+        var trackName = pageService.GetInnerTextByPath(pageWithTrackInfo, Constants.TrackNameXPath);
+        return new TrackInfo()
+        {
+            Name = trackName,
+        };
     }
 }

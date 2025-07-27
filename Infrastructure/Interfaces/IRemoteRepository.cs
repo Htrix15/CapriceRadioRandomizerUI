@@ -6,5 +6,5 @@ public interface IRemoteRepository
 {
     public Task<List<Genre>> GetGenres();
     public Task FillingGenres(List<Genre> genres);
-    public TrackInfo GetTrackInfo(string trackInfoLink);
+    public Task <TrackInfo> GetTrackInfo(string trackInfoLink);
 }

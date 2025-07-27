@@ -1,6 +1,5 @@
 ﻿using Caprice;
 using HtmlAgilityPack;
-using Infrastructure.Constants;
 using Infrastructure.Models;
 
 namespace Tests.Caprice;
@@ -85,7 +84,7 @@ internal class PageServiceTests
     {
         var service = new PageService();
 
-        Assert.DoesNotThrowAsync(async () => await service.GetPage(CapricePageConstants.MainPagehUrl));
+        Assert.DoesNotThrowAsync(async () => await service.GetPage(Constants.MainPagehUrl));
     }
 
     [Test]
