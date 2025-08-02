@@ -20,8 +20,4 @@ public class Genre
     public required int Rating { get; set; }
 
     public RemoteSources? RemoteSources { get; set; }
-
-    public decimal CalculatedRating => ItIsParent
-        ? SubGenres?.Sum(g => g.CalculatedRating) ?? 0
-        : (Rating/ (decimal)RatingCount) * 100;
 }
