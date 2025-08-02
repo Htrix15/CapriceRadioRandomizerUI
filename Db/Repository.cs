@@ -1,5 +1,6 @@
 ﻿using Infrastructure.Interfaces;
 using Infrastructure.Models;
+using Infrastructure.Options;
 using Microsoft.EntityFrameworkCore;
 
 namespace Db;
@@ -64,6 +65,44 @@ public class Repository(IApplicationDbContext dbContext) : IGenreRepository
         await dbContext.Genres.Where(g => g.Key != genreKey).ExecuteUpdateAsync(g => g.SetProperty(p => p.IsLastChoice, p => false));
         var updatedGenre = await dbContext.Genres.FindAsync(genreKey);
         updatedGenre!.IsLastChoice = true;
+        await dbContext.SaveChangesAsync();
+    }
+
+    public async Task UpdateGenres(List<Genre> genres, UpdateGenreOptions options)
+    {
+        var allGenres = await dbContext.Genres.ToListAsync();
+
+        foreach(var genre in allGenres)
+        {
+            var genreUpdates = genres.FirstOrDefault(g => g.Key == genre.Key);
+            if (genreUpdates == null) continue;
+
+            if (options.UpdateName)
+            {
+                genre.Name = genreUpdates.Name;
+            }
+
+            if (options.UpdateIsAvailable)
+            {
+                genre.IsAvailable = genreUpdates.IsAvailable;
+            }
+
+            if (options.UpdateIsDisabled)
+            {
+                genre.IsDisabled = genreUpdates.IsDisabled;
+            }
+
+            if (options.UpdateIsSkip)
+            {
+                genre.IsSkip = genreUpdates.IsSkip;
+            }
+
+            if (options.UpdateRating)
+            {
+                genre.Rating = genreUpdates.Rating;
+            }
+        }
+
         await dbContext.SaveChangesAsync();
     }
 }

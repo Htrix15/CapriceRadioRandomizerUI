@@ -17,23 +17,33 @@ public partial class MainForm : Form
     private RandomeMode randomeMode;
     private bool isComboBoxLoaded = false;
 
+    private GenresViewerFormFactory genresViewerFormFactory;
+    private Form genresViewerForm;
+    
     public MainForm(IPlayerService playerService,
         IGenreLibraryService genreLibraryService,
-        IRandomGenreService randomGenreService)
+        IRandomGenreService randomGenreService,
+        GenresViewerFormFactory genresViewerFormFactory)
     {
         this.playerService = playerService;
         this.genreLibraryService = genreLibraryService;
         this.randomGenreService = randomGenreService;
+        this.genresViewerFormFactory = genresViewerFormFactory;
         InitializeComponent();
     }
 
     private async void MainForm_Load(object sender, EventArgs e)
     {
-        DisableAll();
+        Helpers.DisableAllControls(this);
         InitComboBoxRandomMode();
         await InitComboBoxGenres();
-        EnableAll();
-        await StartTrack();
+        Helpers.EnableAllControls(this);
+    }
+
+    private void InitGenresViewerForm()
+    {
+        var allSubGenres = perantGenres.SelectMany(pg => pg.SubGenres!).ToList();
+        genresViewerForm = genresViewerFormFactory.Create([..perantGenres, .. allSubGenres]);
     }
 
     private bool InitByGenreLastChoice()
@@ -222,26 +232,11 @@ public partial class MainForm : Form
         await genreLibraryService.ItIsLastChoice(currentSubGenre.Key);
     }
 
-    private void EnableAll()
+    private void buttonEditGenres_Click(object sender, EventArgs e)
     {
-        SetControlsEnabled(this, true);
-    }
-
-    private void DisableAll()
-    {
-        SetControlsEnabled(this, false);
-    }
-
-    private void SetControlsEnabled(Control container, bool enabled)
-    {
-        foreach (Control ctrl in container.Controls)
-        {
-            ctrl.Enabled = enabled; 
-
-            if (ctrl.HasChildren)
-            {
-                SetControlsEnabled(ctrl, enabled); 
-            }
-        }
+        InitGenresViewerForm();
+        buttonEditGenres.Enabled = false;
+        genresViewerForm.Show();
+        genresViewerForm.FormClosed += (_,_) => buttonEditGenres.Enabled = true;
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Infrastructure.Models;
+using Infrastructure.Options;
 
 namespace Infrastructure.Interfaces;
 
@@ -12,4 +13,5 @@ public interface IGenreRepository
     public Task IncreaseTrackCount(string genreKey);
     public Task ChangeRating(string genreKey, int rating);
     public Task ItIsLastChoice(string genreKey);
+    public Task UpdateGenres(List<Genre> genres, UpdateGenreOptions options);
 }

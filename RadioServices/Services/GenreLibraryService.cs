@@ -1,5 +1,6 @@
 ﻿using Infrastructure.Interfaces;
 using Infrastructure.Models;
+using Infrastructure.Options;
 
 namespace RadioServices.Services;
 
@@ -80,5 +81,10 @@ public class GenreLibraryService(IRemoteRepository remoteRepository,
     public async Task ItIsLastChoice(string genreKey)
     {
         await genreRepository.ItIsLastChoice(genreKey);
+    }
+
+    public async Task UpdateGenres(List<Genre> genres, UpdateGenreOptions options)
+    {
+        await genreRepository.UpdateGenres(genres, options);
     }
 }

@@ -25,6 +25,7 @@ namespace UI
         private static void ConfigureServices(IServiceCollection services)
         {
             services.RegistrationServices();
+            services.AddSingleton<GenresViewerFormFactory>();
             services.AddTransient<MainForm>();
         }
     }

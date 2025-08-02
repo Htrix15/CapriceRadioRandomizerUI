@@ -40,10 +40,13 @@
             tableLayouTrackOperations = new TableLayoutPanel();
             buttonStartStop = new Button();
             trackBarVolume = new TrackBar();
+            tableLayoutPanel1 = new TableLayoutPanel();
+            buttonEditGenres = new Button();
             tableLayoutPanelForm.SuspendLayout();
             tableLayoutPanelGenresOperations.SuspendLayout();
             tableLayouTrackOperations.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)trackBarVolume).BeginInit();
+            tableLayoutPanel1.SuspendLayout();
             SuspendLayout();
             // 
             // tableLayoutPanelForm
@@ -53,14 +56,16 @@
             tableLayoutPanelForm.Controls.Add(labelTrackName, 0, 0);
             tableLayoutPanelForm.Controls.Add(tableLayoutPanelGenresOperations, 0, 1);
             tableLayoutPanelForm.Controls.Add(tableLayouTrackOperations, 0, 2);
+            tableLayoutPanelForm.Controls.Add(tableLayoutPanel1, 0, 3);
             tableLayoutPanelForm.Dock = DockStyle.Fill;
             tableLayoutPanelForm.Location = new Point(0, 0);
             tableLayoutPanelForm.Name = "tableLayoutPanelForm";
-            tableLayoutPanelForm.RowCount = 3;
-            tableLayoutPanelForm.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
-            tableLayoutPanelForm.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
-            tableLayoutPanelForm.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
-            tableLayoutPanelForm.Size = new Size(800, 450);
+            tableLayoutPanelForm.RowCount = 4;
+            tableLayoutPanelForm.RowStyles.Add(new RowStyle(SizeType.Percent, 33.33333F));
+            tableLayoutPanelForm.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333359F));
+            tableLayoutPanelForm.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333359F));
+            tableLayoutPanelForm.RowStyles.Add(new RowStyle(SizeType.Absolute, 40F));
+            tableLayoutPanelForm.Size = new Size(800, 489);
             tableLayoutPanelForm.TabIndex = 0;
             // 
             // labelTrackName
@@ -165,20 +170,19 @@
             tableLayouTrackOperations.ColumnCount = 2;
             tableLayouTrackOperations.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
             tableLayouTrackOperations.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            tableLayouTrackOperations.Controls.Add(buttonStartStop, 1, 0);
             tableLayouTrackOperations.Controls.Add(trackBarVolume, 0, 0);
             tableLayouTrackOperations.Dock = DockStyle.Fill;
             tableLayouTrackOperations.Location = new Point(3, 301);
             tableLayouTrackOperations.Name = "tableLayouTrackOperations";
             tableLayouTrackOperations.RowCount = 1;
             tableLayouTrackOperations.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            tableLayouTrackOperations.Size = new Size(794, 146);
+            tableLayouTrackOperations.Size = new Size(794, 143);
             tableLayouTrackOperations.TabIndex = 2;
             // 
             // buttonStartStop
             // 
-            buttonStartStop.Anchor = AnchorStyles.None;
-            buttonStartStop.Location = new Point(558, 61);
+            buttonStartStop.Anchor = AnchorStyles.Right;
+            buttonStartStop.Location = new Point(716, 6);
             buttonStartStop.Name = "buttonStartStop";
             buttonStartStop.Size = new Size(75, 23);
             buttonStartStop.TabIndex = 0;
@@ -189,7 +193,7 @@
             // trackBarVolume
             // 
             trackBarVolume.Anchor = AnchorStyles.None;
-            trackBarVolume.Location = new Point(27, 50);
+            trackBarVolume.Location = new Point(27, 49);
             trackBarVolume.Maximum = 100;
             trackBarVolume.Name = "trackBarVolume";
             trackBarVolume.Size = new Size(342, 45);
@@ -197,11 +201,37 @@
             trackBarVolume.Value = 50;
             trackBarVolume.Scroll += trackBarVolume_Scroll;
             // 
+            // tableLayoutPanel1
+            // 
+            tableLayoutPanel1.ColumnCount = 2;
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayoutPanel1.Controls.Add(buttonStartStop, 1, 0);
+            tableLayoutPanel1.Controls.Add(buttonEditGenres, 0, 0);
+            tableLayoutPanel1.Dock = DockStyle.Fill;
+            tableLayoutPanel1.Location = new Point(3, 450);
+            tableLayoutPanel1.Name = "tableLayoutPanel1";
+            tableLayoutPanel1.RowCount = 1;
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            tableLayoutPanel1.Size = new Size(794, 36);
+            tableLayoutPanel1.TabIndex = 3;
+            // 
+            // buttonEditGenres
+            // 
+            buttonEditGenres.Anchor = AnchorStyles.Left;
+            buttonEditGenres.Location = new Point(3, 6);
+            buttonEditGenres.Name = "buttonEditGenres";
+            buttonEditGenres.Size = new Size(80, 23);
+            buttonEditGenres.TabIndex = 1;
+            buttonEditGenres.Text = "Edit Genres";
+            buttonEditGenres.UseVisualStyleBackColor = true;
+            buttonEditGenres.Click += buttonEditGenres_Click;
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
+            ClientSize = new Size(800, 489);
             Controls.Add(tableLayoutPanelForm);
             Name = "MainForm";
             Text = "Player - genre name - sub genre name";
@@ -213,6 +243,7 @@
             tableLayouTrackOperations.ResumeLayout(false);
             tableLayouTrackOperations.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)trackBarVolume).EndInit();
+            tableLayoutPanel1.ResumeLayout(false);
             ResumeLayout(false);
         }
 
@@ -230,5 +261,7 @@
         private Button buttonDisableGenre;
         private ComboBox comboBoxGenres;
         private ComboBox comboBoxRandomMode;
+        private TableLayoutPanel tableLayoutPanel1;
+        private Button buttonEditGenres;
     }
 }
