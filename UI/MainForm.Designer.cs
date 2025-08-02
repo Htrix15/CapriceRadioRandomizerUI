@@ -205,6 +205,7 @@
             Controls.Add(tableLayoutPanelForm);
             Name = "MainForm";
             Text = "Player - genre name - sub genre name";
+            FormClosing += MainForm_FormClosing;
             Load += MainForm_Load;
             tableLayoutPanelForm.ResumeLayout(false);
             tableLayoutPanelForm.PerformLayout();

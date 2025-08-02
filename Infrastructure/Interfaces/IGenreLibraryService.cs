@@ -10,4 +10,5 @@ public interface IGenreLibraryService
     public Task ChangeRating(string key, int rating);
     public Task DisableGenre(string key);
     public Task ReActiveteSubGenres(string parentGanreKey);
+    public Task ItIsLastChoice(string genreKey);
 }

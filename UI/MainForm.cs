@@ -15,7 +15,7 @@ public partial class MainForm : Form
     private Genre currentPerantGenre;
     private Genre currentSubGenre;
     private RandomeMode randomeMode;
-    private bool initSkip = true; //Fix start init autoset genre
+    private bool isComboBoxLoaded = false;
 
     public MainForm(IPlayerService playerService,
         IGenreLibraryService genreLibraryService,
@@ -29,8 +29,24 @@ public partial class MainForm : Form
 
     private async void MainForm_Load(object sender, EventArgs e)
     {
-        await InitComboBoxGenres();
+        DisableAll();
         InitComboBoxRandomMode();
+        await InitComboBoxGenres();
+        EnableAll();
+        await StartTrack();
+    }
+
+    private bool InitByGenreLastChoice()
+    {
+        var parentWithLsat = perantGenres.FirstOrDefault(pg => pg.SubGenres!.Any(g => g.IsLastChoice));
+        if (parentWithLsat != null)
+        {
+            currentPerantGenre = parentWithLsat;
+            currentSubGenre = parentWithLsat.SubGenres!.First(g => g.IsLastChoice);
+            comboBoxGenres.SelectedItem = currentPerantGenre;
+            return true;
+        }
+        return false;
     }
 
     private async Task InitComboBoxGenres()
@@ -38,6 +54,15 @@ public partial class MainForm : Form
         perantGenres = await genreLibraryService.GetGenres();
         comboBoxGenres.DataSource = perantGenres;
         comboBoxGenres.DisplayMember = nameof(Genre.Name);
+
+        var initedChoice = InitByGenreLastChoice();
+        if (!initedChoice)
+        {
+            ForceChangePerantGenre();
+            await Randomize();
+        }
+        isComboBoxLoaded = true;
+        RenameFormTextByGenres();
     }
 
     private void InitComboBoxRandomMode()
@@ -93,7 +118,7 @@ public partial class MainForm : Form
                     buttonDislike.Enabled = true;
                     labelTrackName.Text = trackName;
                     oldName = trackName;
-                }   
+                }
             }
         }
         catch (OperationCanceledException)
@@ -109,11 +134,7 @@ public partial class MainForm : Form
 
     private async void comboBoxGenres_SelectedIndexChanged(object sender, EventArgs e)
     {
-        if (initSkip)
-        {
-            initSkip = false;
-            return;
-        }
+        if (!isComboBoxLoaded) return;
 
         currentPerantGenre = (Genre)comboBoxGenres.SelectedItem!;
         currentSubGenre = randomGenreService.GetRandomGenre(currentPerantGenre.SubGenres!);
@@ -133,7 +154,7 @@ public partial class MainForm : Form
 
     private void ForceChangePerantGenre()
     {
-        perantGenres = [.. perantGenres.Where(pg => pg.Key != currentPerantGenre.Key)];
+        perantGenres = [.. perantGenres.Where(pg => pg.Key != currentPerantGenre?.Key)];
         comboBoxGenres.DataSource = perantGenres;
         randomeMode = randomeMode switch
         {
@@ -145,7 +166,7 @@ public partial class MainForm : Form
 
     private async Task Randomize()
     {
-        await StopTrack();    
+        await StopTrack();
 
         (currentPerantGenre, currentSubGenre) = randomGenreService.GetRandomGenre(randomeMode, currentPerantGenre, perantGenres);
         comboBoxGenres.SelectedItem = currentPerantGenre;
@@ -155,7 +176,7 @@ public partial class MainForm : Form
     }
 
     private async void buttonRandom_Click(object sender, EventArgs e)
-    {     
+    {
         await genreLibraryService.SkipGenre(currentPerantGenre, currentSubGenre);
 
         if (currentPerantGenre.IsSkip)
@@ -163,7 +184,7 @@ public partial class MainForm : Form
             ForceChangePerantGenre();
         }
 
-        await Randomize(); 
+        await Randomize();
     }
 
     private async void buttonLike_Click(object sender, EventArgs e)
@@ -194,5 +215,33 @@ public partial class MainForm : Form
     {
         await genreLibraryService.DisableGenre(currentSubGenre.Key);
         await RemoveCurrentGenre();
+    }
+
+    private async void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+    {
+        await genreLibraryService.ItIsLastChoice(currentSubGenre.Key);
+    }
+
+    private void EnableAll()
+    {
+        SetControlsEnabled(this, true);
+    }
+
+    private void DisableAll()
+    {
+        SetControlsEnabled(this, false);
+    }
+
+    private void SetControlsEnabled(Control container, bool enabled)
+    {
+        foreach (Control ctrl in container.Controls)
+        {
+            ctrl.Enabled = enabled; 
+
+            if (ctrl.HasChildren)
+            {
+                SetControlsEnabled(ctrl, enabled); 
+            }
+        }
     }
 }

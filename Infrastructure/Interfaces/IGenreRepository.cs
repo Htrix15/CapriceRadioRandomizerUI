@@ -11,4 +11,5 @@ public interface IGenreRepository
     public Task ActivateSubGenres(string perantGenreKey);
     public Task IncreaseTrackCount(string genreKey);
     public Task ChangeRating(string genreKey, int rating);
+    public Task ItIsLastChoice(string genreKey);
 }

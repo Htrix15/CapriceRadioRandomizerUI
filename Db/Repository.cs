@@ -58,4 +58,12 @@ public class Repository(IApplicationDbContext dbContext) : IGenreRepository
             .ExecuteUpdateAsync(g =>
                 g.SetProperty(p => p.IsDisabled, p => false));
     }
+
+    public async Task ItIsLastChoice(string genreKey)
+    {
+        await dbContext.Genres.Where(g => g.Key != genreKey).ExecuteUpdateAsync(g => g.SetProperty(p => p.IsLastChoice, p => false));
+        var updatedGenre = await dbContext.Genres.FindAsync(genreKey);
+        updatedGenre!.IsLastChoice = true;
+        await dbContext.SaveChangesAsync();
+    }
 }

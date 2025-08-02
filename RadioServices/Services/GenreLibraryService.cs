@@ -76,4 +76,9 @@ public class GenreLibraryService(IRemoteRepository remoteRepository,
     {
         await genreRepository.ActivateSubGenres(parentGanreKey);
     }
+
+    public async Task ItIsLastChoice(string genreKey)
+    {
+        await genreRepository.ItIsLastChoice(genreKey);
+    }
 }
