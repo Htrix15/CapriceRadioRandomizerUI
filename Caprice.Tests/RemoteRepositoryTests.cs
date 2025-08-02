@@ -2,7 +2,7 @@
 using Infrastructure.Interfaces;
 using Moq;
 
-namespace Tests.Caprice;
+namespace Caprice.Tests;
 
 internal class RemoteRepositoryTests
 {

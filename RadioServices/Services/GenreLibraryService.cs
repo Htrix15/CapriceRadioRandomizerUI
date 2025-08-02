@@ -1,7 +1,7 @@
 ﻿using Infrastructure.Interfaces;
 using Infrastructure.Models;
 
-namespace RadioServices;
+namespace RadioServices.Services;
 
 public class GenreLibraryService(IRemoteRepository remoteRepository,
     IGenreRepository genreRepository) : IGenreLibraryService

@@ -29,19 +29,19 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Caprice\TestHtmls\GenrePage.html">
+    <None Update="TestHtmls\GenrePage.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Caprice\TestHtmls\GenresTable.html">
+    <None Update="TestHtmls\GenresTable.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Caprice\TestHtmls\MainGenreTable.html">
+    <None Update="TestHtmls\MainGenreTable.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Caprice\TestHtmls\MainPage.html">
+    <None Update="TestHtmls\MainPage.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Caprice\TestHtmls\PlayerScript.html">
+    <None Update="TestHtmls\PlayerScript.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

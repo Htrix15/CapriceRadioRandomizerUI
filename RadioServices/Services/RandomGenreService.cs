@@ -2,10 +2,11 @@
 using Infrastructure.Interfaces;
 using Infrastructure.Models;
 
-namespace RadioServices;
+namespace RadioServices.Services;
 
-public class RandomGenreService : IRandomGenreService
+public partial class RandomGenreService : IRandomGenreService
 {
+    
     public Genre GetRandomGenre(List<Genre> genres)
     {
         var random = new Random();
@@ -30,8 +31,8 @@ public class RandomGenreService : IRandomGenreService
         {
             RandomeMode.SubGenre => GetRandomSubGenre(currentGenre),
             RandomeMode.PerantAndSubGenre => GetRandomPerantAndSubGenre(allPerantGenre),
-            RandomeMode.SubGenreWithRatingRange => throw new NotImplementedException(),
-            RandomeMode.PerantAndSubGenreWithRatingRange => throw new NotImplementedException(),
+            RandomeMode.SubGenreWithRatingRange => GetRandomSubGenreRatingRange(currentGenre),
+            RandomeMode.PerantAndSubGenreWithRatingRange => GetRandomPerantAndSubGenreRatingRange(allPerantGenre),
             _ => throw new NotImplementedException(),
         };
   

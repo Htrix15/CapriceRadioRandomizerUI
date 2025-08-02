@@ -1,8 +1,7 @@
 ﻿using Infrastructure.Enums;
 using Infrastructure.Interfaces;
-using Players;
 
-namespace Tests.Player;
+namespace Players.Tests;
 
 internal class PlayerTests
 {

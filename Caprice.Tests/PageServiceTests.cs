@@ -1,8 +1,7 @@
-﻿using Caprice;
-using HtmlAgilityPack;
+﻿using HtmlAgilityPack;
 using Infrastructure.Models;
 
-namespace Tests.Caprice;
+namespace Caprice.Tests;
 
 internal class PageServiceTests
 {

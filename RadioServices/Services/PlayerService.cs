@@ -2,7 +2,7 @@
 using Infrastructure.Interfaces;
 using System.Runtime.CompilerServices;
 
-namespace RadioServices;
+namespace RadioServices.Services;
 
 public class PlayerService(IRemoteRepository remoteRepository,
     IUrlPlayer player) : IPlayerService
