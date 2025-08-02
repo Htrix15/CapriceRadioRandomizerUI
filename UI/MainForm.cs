@@ -184,8 +184,8 @@ public partial class MainForm : Form
 
         if (currentPerantGenre.SubGenres.Count == 0)
         {
-            await genreLibraryService.DisableGenre(currentPerantGenre.Key);
-            ForceChangePerantGenre();
+            await genreLibraryService.ReActiveteSubGenres(currentPerantGenre.Key);
+            currentPerantGenre.SubGenres.ForEach(s => s.IsDisabled = false);
         }
         await Randomize();
     }

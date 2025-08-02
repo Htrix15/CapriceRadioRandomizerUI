@@ -71,4 +71,9 @@ public class GenreLibraryService(IRemoteRepository remoteRepository,
     {
         await genreRepository.DisableGenre(key);
     }
+
+    public async Task ReActiveteSubGenres(string parentGanreKey)
+    {
+        await genreRepository.ActivateSubGenres(parentGanreKey);
+    }
 }

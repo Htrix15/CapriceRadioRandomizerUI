@@ -51,4 +51,11 @@ public class Repository(IApplicationDbContext dbContext) : IGenreRepository
         updatedGenre!.IsDisabled = true;
         await dbContext.SaveChangesAsync();
     }
+
+    public async Task ActivateSubGenres(string perantGenreKey)
+    {
+        await dbContext.Genres.Where(g => g.ParentGenreKey == perantGenreKey)
+            .ExecuteUpdateAsync(g =>
+                g.SetProperty(p => p.IsDisabled, p => false));
+    }
 }

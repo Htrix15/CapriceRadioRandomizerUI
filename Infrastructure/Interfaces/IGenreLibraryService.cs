@@ -9,4 +9,5 @@ public interface IGenreLibraryService
     public Task IncreaseGenreTrackCount(string key);
     public Task ChangeRating(string key, int rating);
     public Task DisableGenre(string key);
+    public Task ReActiveteSubGenres(string parentGanreKey);
 }
