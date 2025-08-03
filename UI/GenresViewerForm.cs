@@ -1,6 +1,5 @@
 ﻿using Infrastructure.Interfaces;
 using Infrastructure.Models;
-using RadioServices.Services;
 
 namespace UI;
 
@@ -13,15 +12,11 @@ public partial class GenresViewerForm : Form
     private int indexParentGenreKeyColumn;
     private int indexParentGenreNameColumn;
 
-    //public GenresViewerForm()
-    //{
-    //    InitializeComponent();
-    //}
-
     public GenresViewerForm(IGenreLibraryService genreLibraryService, List<Genre> genres)
     {
         this.genreLibraryService = genreLibraryService;
-        this.genres = genres;
+     
+        this.genres = genreLibraryService.BuildAllGenresExludedSubGenresSubjection(genres);
         InitializeComponent();
         InitDataGridGenres();
     }
@@ -197,8 +192,9 @@ public partial class GenresViewerForm : Form
 
     private async void buttonRescanGenres_Click(object sender, EventArgs e)
     {
-    
-
+        Helpers.DisableAllControls(this);
+        var (newGenres, updatedGenres) = await genreLibraryService.RescanGenres(genres);
+        Helpers.EnableAllControls(this);
     }
 
     private async void buttonSaveChanges_Click(object sender, EventArgs e)

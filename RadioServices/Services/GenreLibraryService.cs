@@ -87,4 +87,67 @@ public class GenreLibraryService(IRemoteRepository remoteRepository,
     {
         await genreRepository.UpdateGenres(genres, options);
     }
+
+
+    public List<Genre> BuildAllGenresExludedSubGenresSubjection(List<Genre> genres)
+    {
+        var perantGenres = genres.Where(g => g.ItIsParent).ToList();
+        var childGenres = perantGenres.SelectMany(pg => pg.SubGenres!).ToList();
+        perantGenres.ForEach(p => p.SubGenres = null);
+        return [..perantGenres, ..childGenres];
+    }
+
+    public List<Genre> BuildAllGenresExludedPerantSubjection(List<Genre> genres)
+    {
+        var perantGenres = genres.Where(g => g.ParentGenre != null)
+            .Select(g => g.ParentGenre)
+            .DistinctBy(g => g.Key)
+            .ToList();
+
+        genres.ForEach(p => p.ParentGenre = null);
+        return [.. perantGenres, .. genres];
+    }
+
+    public async Task<(List<Genre> New, List<Genre> Updated)> RescanGenres(List<Genre> genres)
+    {
+        var newGenres = new List<Genre>();
+        var updatedGenres = new List<Genre>();
+
+        var remoteGenres = BuildAllGenresExludedPerantSubjection(await remoteRepository.GetGenres());
+
+        var remoteGenresKeys = remoteGenres.Select(g => g.Key).ToList();
+        var notAvailableGenres = genres.Where(g => !remoteGenresKeys.Contains(g.Key)).ToList();
+        if (notAvailableGenres.Count > 0)
+        {
+            notAvailableGenres.ForEach(g => g.IsAvailable = false);
+            await genreRepository.UpdateGenres(notAvailableGenres, 
+                new UpdateGenreOptions() { UpdateIsAvailable = true});
+            updatedGenres.AddRange(notAvailableGenres);
+        }
+
+        var oldGenresKey = genres.Select(g => g.Key).ToList();
+        newGenres = remoteGenres.Where(g => !oldGenresKey.Contains(g.Key)).ToList();
+        if (newGenres.Count > 0)
+        {
+            var perantGenres = newGenres.Where(g => g.ItIsParent).ToList();
+            await genreRepository.AddGenres(perantGenres);
+
+            var subGenres = newGenres.Where(g => !g.ItIsParent).ToList();
+            await genreRepository.AddGenres(subGenres);
+        }
+
+        var updatedGenre = remoteGenres.Where(g => oldGenresKey.Contains(g.Key)).ToList();
+        if (updatedGenre.Count > 0)
+        {
+            await genreRepository.UpdateGenres(updatedGenre,
+               new UpdateGenreOptions() { 
+                   UpdateName = true,
+                   UpdateRemoteSources = true,
+                   UpdatePerantKey = true,
+               });
+            updatedGenres.AddRange(updatedGenre);
+        }
+
+        return (newGenres, updatedGenres);
+    }
 }

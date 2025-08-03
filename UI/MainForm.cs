@@ -42,8 +42,7 @@ public partial class MainForm : Form
 
     private void InitGenresViewerForm()
     {
-        var allSubGenres = perantGenres.SelectMany(pg => pg.SubGenres!).ToList();
-        genresViewerForm = genresViewerFormFactory.Create([..perantGenres, .. allSubGenres]);
+        genresViewerForm = genresViewerFormFactory.Create(perantGenres);
     }
 
     private bool InitByGenreLastChoice()

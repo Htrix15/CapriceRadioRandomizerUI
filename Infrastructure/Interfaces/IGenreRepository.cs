@@ -6,6 +6,7 @@ namespace Infrastructure.Interfaces;
 public interface IGenreRepository
 {
     public Task SkipGenre(string genreKey);
+    public Task<List<Genre>> GetAllGenres();
     public Task<List<Genre>> GetAllActiveGenres();
     public Task AddGenres(List<Genre> genres);
     public Task DisableGenre(string genreKey);
