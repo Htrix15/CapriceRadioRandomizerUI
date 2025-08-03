@@ -11,12 +11,6 @@ public class Repository(IRemoteService remoteService,
         return await remoteService.CreateGenres();
     }
 
-    public Task FillingGenres(List<Genre> genres)
-    {
-        throw new NotImplementedException();
-    }
-
-
     public async Task<TrackInfo> GetTrackInfo(string trackInfoLink)
     {
         var pageWithTrackInfo = await pageService.GetPage(trackInfoLink);

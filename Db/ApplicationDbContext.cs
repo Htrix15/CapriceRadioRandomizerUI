@@ -10,15 +10,7 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
 
     public DbSet<RemoteSources> RemoteSources { get; set; }
 
-    public ApplicationDbContext()
-    {
-        Database.EnsureCreated();
-    }
-
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        var dbPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Radio.db");
-        optionsBuilder.UseSqlite($"Data Source={dbPath}");
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) {
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

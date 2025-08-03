@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RadioServices.Tests", "Radi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caprice.Tests", "Caprice.Tests\Caprice.Tests.csproj", "{FF8A32E2-01E9-16E2-E2C7-56C6F447C79A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceCollectionRegistrar", "ServiceCollectionRegistrar\ServiceCollectionRegistrar.csproj", "{6788A444-8C6B-4197-9751-1606D506DBCD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +65,10 @@ Global
 		{FF8A32E2-01E9-16E2-E2C7-56C6F447C79A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FF8A32E2-01E9-16E2-E2C7-56C6F447C79A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FF8A32E2-01E9-16E2-E2C7-56C6F447C79A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6788A444-8C6B-4197-9751-1606D506DBCD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6788A444-8C6B-4197-9751-1606D506DBCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6788A444-8C6B-4197-9751-1606D506DBCD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6788A444-8C6B-4197-9751-1606D506DBCD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

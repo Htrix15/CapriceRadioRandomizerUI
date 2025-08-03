@@ -7,6 +7,14 @@ namespace Db;
 
 public class Repository(IApplicationDbContext dbContext) : IGenreRepository
 {
+    public async Task<List<Genre>> GetAllGenres()
+    {
+        return await dbContext.Genres
+            .AsNoTracking()
+            .Include(g => g.RemoteSources)
+            .ToListAsync();
+    }
+
     public async Task AddGenres(List<Genre> genres)
     {
         await dbContext.Genres.AddRangeAsync(genres);
@@ -70,9 +78,15 @@ public class Repository(IApplicationDbContext dbContext) : IGenreRepository
 
     public async Task UpdateGenres(List<Genre> genres, UpdateGenreOptions options)
     {
-        var allGenres = await dbContext.Genres.ToListAsync();
+        var query = dbContext.Genres.AsQueryable();
+        if (options.UpdateRemoteSources)
+        {
+            query = query.Include(q => q.RemoteSources);
+        }
 
-        foreach(var genre in allGenres)
+        var allGenres = await query.ToListAsync();
+
+        foreach (var genre in allGenres)
         {
             var genreUpdates = genres.FirstOrDefault(g => g.Key == genre.Key);
             if (genreUpdates == null) continue;
@@ -100,6 +114,19 @@ public class Repository(IApplicationDbContext dbContext) : IGenreRepository
             if (options.UpdateRating)
             {
                 genre.Rating = genreUpdates.Rating;
+            }
+
+            if (options.UpdateRemoteSources 
+                && genreUpdates.RemoteSources != null
+                && genre.RemoteSources != null)
+            {
+                genre.RemoteSources.TrackInfoBaseLink = genreUpdates.RemoteSources.TrackInfoBaseLink;
+                genre.RemoteSources.PlayLink = genreUpdates.RemoteSources.PlayLink;
+            }
+
+            if (options.UpdatePerantKey)
+            {
+                genre.ParentGenreKey = genreUpdates.ParentGenreKey;
             }
         }
 

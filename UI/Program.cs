@@ -1,5 +1,6 @@
+using Infrastructure.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
-using RadioServices;
+using ServiceCollectionRegistrar;
 
 namespace UI
 {
@@ -20,11 +21,17 @@ namespace UI
 
             var serviceProvider = services.BuildServiceProvider();
 
+            using (var scope = serviceProvider.CreateScope())
+            {
+                var dbInitializer = scope.ServiceProvider.GetRequiredService<IDbInitializer>();
+                dbInitializer.Initialize();
+            }
+
             Application.Run(serviceProvider.GetRequiredService<MainForm>());
         }
         private static void ConfigureServices(IServiceCollection services)
         {
-            services.RegistrationServices();
+            services.Registration();
             services.AddSingleton<GenresViewerFormFactory>();
             services.AddTransient<MainForm>();
         }

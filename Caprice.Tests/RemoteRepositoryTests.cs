@@ -1,5 +1,4 @@
-﻿using Caprice;
-using Infrastructure.Interfaces;
+﻿using Infrastructure.Interfaces;
 using Moq;
 
 namespace Caprice.Tests;
