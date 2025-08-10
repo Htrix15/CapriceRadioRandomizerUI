@@ -14,25 +14,25 @@ public partial class RandomGenreService : IRandomGenreService
         return genres[randomIndex];
     }
 
-    private (Genre perant, Genre sub) GetRandomSubGenre(Genre currentGenre)
+    private (Genre parent, Genre sub) GetRandomSubGenre(Genre currentGenre)
     {
         return (currentGenre, GetRandomGenre(currentGenre.SubGenres!));
     }
 
-    private (Genre perant, Genre sub) GetRandomPerantAndSubGenre(List<Genre> allPerantGenre)
+    private (Genre parent, Genre sub) GetRandomParentAndSubGenre(List<Genre> allParentGenre)
     {
-        var newPerant = GetRandomGenre(allPerantGenre);
-        return (newPerant, GetRandomGenre(newPerant.SubGenres!));
+        var newParent = GetRandomGenre(allParentGenre);
+        return (newParent, GetRandomGenre(newParent.SubGenres!));
     }
 
-    public (Genre perant, Genre sub) GetRandomGenre(RandomeMode randomeMode,
+    public (Genre parent, Genre sub) GetRandomGenre(RandomeMode randomeMode,
         Genre currentGenre,
-        List<Genre> allPerantGenre) => randomeMode switch
+        List<Genre> allParentGenre) => randomeMode switch
         {
             RandomeMode.SubGenre => GetRandomSubGenre(currentGenre),
-            RandomeMode.PerantAndSubGenre => GetRandomPerantAndSubGenre(allPerantGenre),
+            RandomeMode.ParentAndSubGenre => GetRandomParentAndSubGenre(allParentGenre),
             RandomeMode.SubGenreWithRatingRange => GetRandomSubGenreRatingRange(currentGenre),
-            RandomeMode.PerantAndSubGenreWithRatingRange => GetRandomPerantAndSubGenreRatingRange(allPerantGenre),
+            RandomeMode.ParentAndSubGenreWithRatingRange => GetRandomParentAndSubGenreRatingRange(allParentGenre),
             _ => throw new NotImplementedException(),
         };
   

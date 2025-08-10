@@ -1,15 +1,14 @@
 ﻿using Infrastructure.Interfaces;
-using Infrastructure.Models;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace UI;
 
-public class GenresViewerFormFactory(IServiceProvider serviceProvider)
+public class GenresViewerFormFactory(IServiceProvider serviceProvider, IGenreLibraryService genreLibrary)
 {
-    public GenresViewerForm Create(List<Genre> genres)
+    public async Task<GenresViewerForm> Create()
     {
         var genreLibraryService = serviceProvider.GetRequiredService<IGenreLibraryService>();
-
-        return new GenresViewerForm(genreLibraryService, genres);
+        var allGenres = await genreLibrary.GetAllGenres();
+        return new GenresViewerForm(genreLibraryService, allGenres);
     }
 }

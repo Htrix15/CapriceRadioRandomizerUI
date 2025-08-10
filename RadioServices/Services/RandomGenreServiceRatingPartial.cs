@@ -55,14 +55,14 @@ public partial class RandomGenreService : IRandomGenreService
         return GetRatingProportionalGenre(ratingProportionalGenre);
     }
 
-    private (Genre perant, Genre sub) GetRandomSubGenreRatingRange(Genre currentGenre)
+    private (Genre parent, Genre sub) GetRandomSubGenreRatingRange(Genre currentGenre)
     {
         return (currentGenre, GetRandomWithRatingRange(currentGenre.SubGenres!));
     }
 
-    private (Genre perant, Genre sub) GetRandomPerantAndSubGenreRatingRange(List<Genre> allPerantGenre)
+    private (Genre parent, Genre sub) GetRandomParentAndSubGenreRatingRange(List<Genre> allParentGenre)
     {
-        var newPerant = GetRandomWithRatingRange(allPerantGenre);
-        return (newPerant, GetRandomWithRatingRange(newPerant.SubGenres!));
+        var newParent = GetRandomWithRatingRange(allParentGenre);
+        return (newParent, GetRandomWithRatingRange(newParent.SubGenres!));
     }
 }

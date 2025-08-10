@@ -3,7 +3,7 @@
 public enum RandomeMode
 {
     SubGenre,
-    PerantAndSubGenre,
+    ParentAndSubGenre,
     SubGenreWithRatingRange,
-    PerantAndSubGenreWithRatingRange,
+    ParentAndSubGenreWithRatingRange,
 }

@@ -5,18 +5,22 @@ namespace UI;
 
 public partial class GenresViewerForm : Form
 {
+    public event Action<(bool hasChanges, List<Genre> genres)> DataReturned;
+
     private IGenreLibraryService genreLibraryService;
     private List<Genre> genres;
 
-    private int indexItIsPerantColumn;
+    private int indexItIsParentColumn;
     private int indexParentGenreKeyColumn;
     private int indexParentGenreNameColumn;
+
+    private bool hasChanges;
 
     public GenresViewerForm(IGenreLibraryService genreLibraryService, List<Genre> genres)
     {
         this.genreLibraryService = genreLibraryService;
-     
-        this.genres = genreLibraryService.BuildAllGenresExludedSubGenresSubjection(genres);
+
+        this.genres = genres;
         InitializeComponent();
         InitDataGridGenres();
     }
@@ -120,19 +124,19 @@ public partial class GenresViewerForm : Form
             ]);
 
         indexParentGenreKeyColumn = dataGridViewGenres.Columns[nameof(Genre.ParentGenreKey)]!.Index;
-        indexItIsPerantColumn = dataGridViewGenres.Columns[nameof(Genre.ItIsParent)]!.Index;
+        indexItIsParentColumn = dataGridViewGenres.Columns[nameof(Genre.ItIsParent)]!.Index;
         indexParentGenreNameColumn = dataGridViewGenres.Columns["Parent Genre Name"]!.Index;
 
         dataGridViewGenres.DataSource = genres;
         Helpers.EnableAllControls(this);
     }
 
-    private void RenamePeranteGenres()
+    private void RenameParenteGenres()
     {
         Helpers.DisableAllControls(this);
         for (int i = 0; i < dataGridViewGenres.RowCount; i++)
         {
-            if ((bool)dataGridViewGenres[indexItIsPerantColumn, i].Value! == true) continue;
+            if ((bool)dataGridViewGenres[indexItIsParentColumn, i].Value! == true) continue;
 
             var parentGenreKey = (string)dataGridViewGenres[indexParentGenreKeyColumn, i].Value!;
             dataGridViewGenres[indexParentGenreNameColumn, i].Value = genres.First(g => g.Key == parentGenreKey).Name;
@@ -144,13 +148,13 @@ public partial class GenresViewerForm : Form
     {
         if (dataGridViewGenres.Columns[e.ColumnIndex].Name == nameof(Genre.Name))
         {
-            RenamePeranteGenres();
+            RenameParenteGenres();
         }
     }
 
     private void dataGridViewGenres_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
     {
-        RenamePeranteGenres();
+        RenameParenteGenres();
     }
 
     private void CancelCellWithInvalidateName(DataGridViewCellValidatingEventArgs e)
@@ -181,7 +185,7 @@ public partial class GenresViewerForm : Form
         if (!int.TryParse(newRatingString, out var newRating))
         {
             e.Cancel = true;
-        } 
+        }
     }
 
     private void dataGridViewGenres_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
@@ -192,13 +196,18 @@ public partial class GenresViewerForm : Form
 
     private async void buttonRescanGenres_Click(object sender, EventArgs e)
     {
+        labelProcess.Text = "Rescan and save...";
+
         Helpers.DisableAllControls(this);
-        var (newGenres, updatedGenres) = await genreLibraryService.RescanGenres(genres);
+        await genreLibraryService.UpdateGenres(genres);
+        hasChanges = true;
         Helpers.EnableAllControls(this);
+        labelProcess.Text = "";
     }
 
     private async void buttonSaveChanges_Click(object sender, EventArgs e)
     {
+        labelProcess.Text = "Save...";
         Helpers.DisableAllControls(this);
         await genreLibraryService.UpdateGenres(genres, new Infrastructure.Options.UpdateGenreOptions()
         {
@@ -207,6 +216,13 @@ public partial class GenresViewerForm : Form
             UpdateIsSkip = true,
             UpdateRating = true,
         });
+        hasChanges = true;
         Helpers.EnableAllControls(this);
+        labelProcess.Text = "";
+    }
+
+    private void GenresViewerForm_FormClosed(object sender, FormClosedEventArgs e)
+    {
+        DataReturned.Invoke((hasChanges, genres));
     }
 }

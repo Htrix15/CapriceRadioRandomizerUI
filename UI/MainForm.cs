@@ -11,14 +11,14 @@ public partial class MainForm : Form
     private readonly IRandomGenreService randomGenreService;
     private TrackState trackState = TrackState.Absent;
     private CancellationTokenSource trackPlayingToken;
-    private List<Genre> perantGenres = [];
-    private Genre currentPerantGenre;
+    private List<Genre> parentGenres = [];
+    private Genre currentParentGenre;
     private Genre currentSubGenre;
     private RandomeMode randomeMode;
     private bool isComboBoxLoaded = false;
 
     private GenresViewerFormFactory genresViewerFormFactory;
-    private Form genresViewerForm;
+    private GenresViewerForm genresViewerForm;
     
     public MainForm(IPlayerService playerService,
         IGenreLibraryService genreLibraryService,
@@ -34,25 +34,27 @@ public partial class MainForm : Form
 
     private async void MainForm_Load(object sender, EventArgs e)
     {
+        labelProgress.Text = "Loading...";
         Helpers.DisableAllControls(this);
         InitComboBoxRandomMode();
         await InitComboBoxGenres();
         Helpers.EnableAllControls(this);
+        labelProgress.Text = "";
     }
 
-    private void InitGenresViewerForm()
+    private async Task InitGenresViewerForm()
     {
-        genresViewerForm = genresViewerFormFactory.Create(perantGenres);
+        genresViewerForm = await genresViewerFormFactory.Create();
     }
 
     private bool InitByGenreLastChoice()
     {
-        var parentWithLsat = perantGenres.FirstOrDefault(pg => pg.SubGenres!.Any(g => g.IsLastChoice));
+        var parentWithLsat = parentGenres.FirstOrDefault(pg => pg.SubGenres!.Any(g => g.IsLastChoice));
         if (parentWithLsat != null)
         {
-            currentPerantGenre = parentWithLsat;
+            currentParentGenre = parentWithLsat;
             currentSubGenre = parentWithLsat.SubGenres!.First(g => g.IsLastChoice);
-            comboBoxGenres.SelectedItem = currentPerantGenre;
+            comboBoxGenres.SelectedItem = currentParentGenre;
             return true;
         }
         return false;
@@ -60,14 +62,14 @@ public partial class MainForm : Form
 
     private async Task InitComboBoxGenres()
     {
-        perantGenres = await genreLibraryService.GetGenres();
-        comboBoxGenres.DataSource = perantGenres;
+        parentGenres = await genreLibraryService.GetOrCreateGenres();
+        comboBoxGenres.DataSource = parentGenres;
         comboBoxGenres.DisplayMember = nameof(Genre.Name);
 
         var initedChoice = InitByGenreLastChoice();
         if (!initedChoice)
         {
-            ForceChangePerantGenre();
+            ForceChangeParentGenre();
             await Randomize();
         }
         isComboBoxLoaded = true;
@@ -76,7 +78,18 @@ public partial class MainForm : Form
 
     private void InitComboBoxRandomMode()
     {
-        comboBoxRandomMode.DataSource = Enum.GetValues<RandomeMode>();
+        var dandomeModeDictionary = new Dictionary<RandomeMode, string>
+        {
+            { RandomeMode.SubGenre, "Random Subgenre" },
+            { RandomeMode.ParentAndSubGenre, "Random Parent genre and Subgenre" },
+            { RandomeMode.SubGenreWithRatingRange, "Random Subgenre based on rating" },
+            { RandomeMode.ParentAndSubGenreWithRatingRange, "Random Parent genre and Subgenre based on rating" }
+        };
+
+        comboBoxRandomMode.DataSource = new BindingSource(dandomeModeDictionary, null);
+        comboBoxRandomMode.DisplayMember = "Value";
+        comboBoxRandomMode.ValueMember = "Key";
+
     }
 
     private async Task StartTrack()
@@ -138,15 +151,15 @@ public partial class MainForm : Form
 
     private void RenameFormTextByGenres()
     {
-        Text = $"Player - {currentPerantGenre.Name} - {currentSubGenre.Name}";
+        Text = $"Player - {currentParentGenre.Name} - {currentSubGenre.Name}";
     }
 
     private async void comboBoxGenres_SelectedIndexChanged(object sender, EventArgs e)
     {
         if (!isComboBoxLoaded) return;
 
-        currentPerantGenre = (Genre)comboBoxGenres.SelectedItem!;
-        currentSubGenre = randomGenreService.GetRandomGenre(currentPerantGenre.SubGenres!);
+        currentParentGenre = (Genre)comboBoxGenres.SelectedItem!;
+        currentSubGenre = randomGenreService.GetRandomGenre(currentParentGenre.SubGenres!);
         RenameFormTextByGenres();
 
         if (!ItIsNotPlayState())
@@ -158,17 +171,17 @@ public partial class MainForm : Form
 
     private void comboBoxRandomMode_SelectedIndexChanged(object sender, EventArgs e)
     {
-        randomeMode = (RandomeMode)comboBoxRandomMode.SelectedItem!;
+        randomeMode = ((KeyValuePair<RandomeMode, string>)comboBoxRandomMode.SelectedItem!).Key;
     }
 
-    private void ForceChangePerantGenre()
+    private void ForceChangeParentGenre()
     {
-        perantGenres = [.. perantGenres.Where(pg => pg.Key != currentPerantGenre?.Key)];
-        comboBoxGenres.DataSource = perantGenres;
+        parentGenres = [.. parentGenres.Where(pg => pg.Key != currentParentGenre?.Key)];
+        comboBoxGenres.DataSource = parentGenres;
         randomeMode = randomeMode switch
         {
-            RandomeMode.SubGenre => RandomeMode.PerantAndSubGenre,
-            RandomeMode.SubGenreWithRatingRange => RandomeMode.PerantAndSubGenreWithRatingRange,
+            RandomeMode.SubGenre => RandomeMode.ParentAndSubGenre,
+            RandomeMode.SubGenreWithRatingRange => RandomeMode.ParentAndSubGenreWithRatingRange,
             _ => randomeMode
         };
     }
@@ -177,8 +190,8 @@ public partial class MainForm : Form
     {
         await StopTrack();
 
-        (currentPerantGenre, currentSubGenre) = randomGenreService.GetRandomGenre(randomeMode, currentPerantGenre, perantGenres);
-        comboBoxGenres.SelectedItem = currentPerantGenre;
+        (currentParentGenre, currentSubGenre) = randomGenreService.GetRandomGenre(randomeMode, currentParentGenre, parentGenres);
+        comboBoxGenres.SelectedItem = currentParentGenre;
         RenameFormTextByGenres();
 
         await StartTrack();
@@ -186,11 +199,11 @@ public partial class MainForm : Form
 
     private async void buttonRandom_Click(object sender, EventArgs e)
     {
-        await genreLibraryService.SkipGenre(currentPerantGenre, currentSubGenre);
+        await genreLibraryService.SkipGenre(currentParentGenre, currentSubGenre);
 
-        if (currentPerantGenre.IsSkip)
+        if (currentParentGenre.IsSkip)
         {
-            ForceChangePerantGenre();
+            ForceChangeParentGenre();
         }
 
         await Randomize();
@@ -210,12 +223,12 @@ public partial class MainForm : Form
 
     private async Task RemoveCurrentGenre()
     {
-        currentPerantGenre.SubGenres = [.. currentPerantGenre.SubGenres!.Where(sg => sg.Key != currentSubGenre.Key)];
+        currentParentGenre.SubGenres = [.. currentParentGenre.SubGenres!.Where(sg => sg.Key != currentSubGenre.Key)];
 
-        if (currentPerantGenre.SubGenres.Count == 0)
+        if (currentParentGenre.SubGenres.Count == 0)
         {
-            await genreLibraryService.ReActiveteSubGenres(currentPerantGenre.Key);
-            currentPerantGenre.SubGenres.ForEach(s => s.IsDisabled = false);
+            await genreLibraryService.ReActiveteSubGenres(currentParentGenre.Key);
+            currentParentGenre.SubGenres.ForEach(s => s.IsDisabled = false);
         }
         await Randomize();
     }
@@ -231,11 +244,25 @@ public partial class MainForm : Form
         await genreLibraryService.ItIsLastChoice(currentSubGenre.Key);
     }
 
-    private void buttonEditGenres_Click(object sender, EventArgs e)
+    private async void buttonEditGenres_Click(object sender, EventArgs e)
     {
-        InitGenresViewerForm();
+        await InitGenresViewerForm();
         buttonEditGenres.Enabled = false;
+        genresViewerForm.DataReturned += (data) => {
+            buttonEditGenres.Enabled = true;
+            if (!data.hasChanges) return;
+
+            parentGenres = genreLibraryService.PackGenresIntoParentGenres(data.genres);
+            currentParentGenre = parentGenres.FirstOrDefault(g => g.Key == currentParentGenre.Key);
+            currentSubGenre = currentParentGenre.SubGenres.FirstOrDefault(g => g.Key == currentSubGenre.Key);
+
+            isComboBoxLoaded = false;
+            comboBoxGenres.DataSource = parentGenres;
+            isComboBoxLoaded = true;
+            RenameFormTextByGenres();
+        };
+
         genresViewerForm.Show();
-        genresViewerForm.FormClosed += (_,_) => buttonEditGenres.Enabled = true;
+       
     }
 }

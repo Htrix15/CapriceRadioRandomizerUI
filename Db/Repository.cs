@@ -64,9 +64,9 @@ public class Repository(IApplicationDbContext<DatabaseFacade> dbContext) : IGenr
         await dbContext.SaveChangesAsync();
     }
 
-    public async Task ActivateSubGenres(string perantGenreKey)
+    public async Task ActivateSubGenres(string parentGenreKey)
     {
-        await dbContext.Genres.Where(g => g.ParentGenreKey == perantGenreKey)
+        await dbContext.Genres.Where(g => g.ParentGenreKey == parentGenreKey)
             .ExecuteUpdateAsync(g =>
                 g.SetProperty(p => p.IsDisabled, p => false));
     }
@@ -146,6 +146,7 @@ public class Repository(IApplicationDbContext<DatabaseFacade> dbContext) : IGenr
             {
                 foreach (var genres in newGenres)
                 {
+                    if (genres.Count == 0) continue;
                     await AddGenres(genres);
                 }
             }
@@ -154,6 +155,7 @@ public class Repository(IApplicationDbContext<DatabaseFacade> dbContext) : IGenr
             {
                 foreach (var genresWithOptions in updatedGenres)
                 {
+                    if (genresWithOptions.genres.Count == 0) continue;
                     await UpdateGenres(genresWithOptions.genres, genresWithOptions.updateGenreOptions);
                 }
 

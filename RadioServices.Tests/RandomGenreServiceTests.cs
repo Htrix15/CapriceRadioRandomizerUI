@@ -87,13 +87,13 @@ internal class RandomGenreServiceTests
     }
 
     [Test]
-    public void GetRandomGenre_PerantGenresWithDifferentChildRatings_PerantGenreWithMoreChildRatingsIsChosenMoreOfThen()
+    public void GetRandomGenre_ParentGenresWithDifferentChildRatings_ParentGenreWithMoreChildRatingsIsChosenMoreOfThen()
     {
-        var popularPerantGenreKey = "Perant" + PopularGenreKey;
-        var popularPerantGenre = new Genre()
+        var popularParentGenreKey = "Parent" + PopularGenreKey;
+        var popularParentGenre = new Genre()
         {
-            Key = popularPerantGenreKey,
-            Name = "popularPerantGenre",
+            Key = popularParentGenreKey,
+            Name = "popularParentGenre",
             ItIsParent = true,
             IsAvailable = true,
             IsDisabled = false,
@@ -104,11 +104,11 @@ internal class RandomGenreServiceTests
             SubGenres = [PopularGenre, PopularGenre, PopularGenre, NeutralGenre, NotPopularGenre]
         };
 
-        var neutralPerantGenreKey = "Perant" + NeutralGenreKey;
-        var neutralPerantGenre = new Genre()
+        var neutralParentGenreKey = "Parent" + NeutralGenreKey;
+        var neutralParentGenre = new Genre()
         {
-            Key = neutralPerantGenreKey,
-            Name = "neutralPerantGenre",
+            Key = neutralParentGenreKey,
+            Name = "neutralParentGenre",
             ItIsParent = true,
             IsAvailable = true,
             IsDisabled = false,
@@ -119,11 +119,11 @@ internal class RandomGenreServiceTests
             SubGenres = [NeutralGenre, NeutralGenre, NeutralGenre, PopularGenre, NotPopularGenre]
         };
 
-        var notPopularPerantGenreKey = "Perant" + NotPopularGenreKey;
-        var notPopularPerantGenre = new Genre()
+        var notPopularParentGenreKey = "Parent" + NotPopularGenreKey;
+        var notPopularParentGenre = new Genre()
         {
-            Key = notPopularPerantGenreKey,
-            Name = "notPopularPerantGenre",
+            Key = notPopularParentGenreKey,
+            Name = "notPopularParentGenre",
             ItIsParent = true,
             IsAvailable = true,
             IsDisabled = false,
@@ -135,27 +135,27 @@ internal class RandomGenreServiceTests
         };
 
 
-        List<Genre> genres = [popularPerantGenre, neutralPerantGenre, notPopularPerantGenre];
+        List<Genre> genres = [popularParentGenre, neutralParentGenre, notPopularParentGenre];
 
         IRandomGenreService randomService = new RandomGenreService();
 
         var statistics = new Dictionary<string, int>
         {
-            { popularPerantGenreKey, 0 },
-            { neutralPerantGenreKey, 0 },
-            { notPopularPerantGenreKey, 0 },
+            { popularParentGenreKey, 0 },
+            { neutralParentGenreKey, 0 },
+            { notPopularParentGenreKey, 0 },
         };
 
         for (var i = 0; i < 100000; i++)
         {
-            var randomGenre = randomService.GetRandomGenre(Infrastructure.Enums.RandomeMode.PerantAndSubGenreWithRatingRange, null, genres).perant;
+            var randomGenre = randomService.GetRandomGenre(Infrastructure.Enums.RandomeMode.ParentAndSubGenreWithRatingRange, null, genres).parent;
             statistics[randomGenre.Key]++;
         }
 
         Assert.Multiple(() =>
         {
-            Assert.That(statistics[popularPerantGenreKey], Is.GreaterThan(statistics[neutralPerantGenreKey]));
-            Assert.That(statistics[neutralPerantGenreKey], Is.GreaterThan(statistics[notPopularPerantGenreKey]));
+            Assert.That(statistics[popularParentGenreKey], Is.GreaterThan(statistics[neutralParentGenreKey]));
+            Assert.That(statistics[neutralParentGenreKey], Is.GreaterThan(statistics[notPopularParentGenreKey]));
         });
     }
 }

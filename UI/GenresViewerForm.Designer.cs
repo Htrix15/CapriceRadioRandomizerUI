@@ -33,6 +33,7 @@
             tableLayoutPanel2 = new TableLayoutPanel();
             buttonRescanGenres = new Button();
             buttonSaveChanges = new Button();
+            labelProcess = new Label();
             tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridViewGenres).BeginInit();
             tableLayoutPanel2.SuspendLayout();
@@ -67,11 +68,13 @@
             // 
             // tableLayoutPanel2
             // 
-            tableLayoutPanel2.ColumnCount = 2;
-            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayoutPanel2.ColumnCount = 3;
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333321F));
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333321F));
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333321F));
             tableLayoutPanel2.Controls.Add(buttonRescanGenres, 0, 0);
-            tableLayoutPanel2.Controls.Add(buttonSaveChanges, 1, 0);
+            tableLayoutPanel2.Controls.Add(buttonSaveChanges, 2, 0);
+            tableLayoutPanel2.Controls.Add(labelProcess, 1, 0);
             tableLayoutPanel2.Dock = DockStyle.Fill;
             tableLayoutPanel2.Location = new Point(3, 517);
             tableLayoutPanel2.Name = "tableLayoutPanel2";
@@ -101,6 +104,17 @@
             buttonSaveChanges.UseVisualStyleBackColor = true;
             buttonSaveChanges.Click += buttonSaveChanges_Click;
             // 
+            // labelProcess
+            // 
+            labelProcess.Anchor = AnchorStyles.None;
+            labelProcess.AutoSize = true;
+            labelProcess.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            labelProcess.ForeColor = Color.ForestGreen;
+            labelProcess.Location = new Point(430, 6);
+            labelProcess.Name = "labelProcess";
+            labelProcess.Size = new Size(0, 21);
+            labelProcess.TabIndex = 2;
+            // 
             // GenresViewerForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -109,9 +123,11 @@
             Controls.Add(tableLayoutPanel1);
             Name = "GenresViewerForm";
             Text = "GenresViewer";
+            FormClosed += GenresViewerForm_FormClosed;
             tableLayoutPanel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dataGridViewGenres).EndInit();
             tableLayoutPanel2.ResumeLayout(false);
+            tableLayoutPanel2.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -122,5 +138,6 @@
         private DataGridView dataGridViewGenres;
         private TableLayoutPanel tableLayoutPanel2;
         private Button buttonSaveChanges;
+        private Label labelProcess;
     }
 }

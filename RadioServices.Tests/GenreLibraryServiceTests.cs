@@ -28,10 +28,10 @@ internal class GenreLibraryServiceTests
 
     private void InitGenresSamples()
     {
-        var perantGenre = new Genre()
+        var parentGenre = new Genre()
         {
-            Key = "perant",
-            Name = "perant genre",
+            Key = "parent",
+            Name = "parent genre",
             ItIsParent = true,
             IsAvailable = true,
             IsDisabled = false,
@@ -46,8 +46,8 @@ internal class GenreLibraryServiceTests
             Key = "subGenre1",
             Name = "sub genre 1",
             ItIsParent = false,
-            ParentGenreKey = perantGenre.Key,
-            ParentGenre = perantGenre,
+            ParentGenreKey = parentGenre.Key,
+            ParentGenre = parentGenre,
             IsAvailable = true,
             IsDisabled = false,
             IsSkip = false,
@@ -67,8 +67,8 @@ internal class GenreLibraryServiceTests
             Key = "subGenre2",
             Name = "sub genre 2",
             ItIsParent = false,
-            ParentGenreKey = perantGenre.Key,
-            ParentGenre = perantGenre,
+            ParentGenreKey = parentGenre.Key,
+            ParentGenre = parentGenre,
             IsAvailable = true,
             IsDisabled = false,
             IsSkip = false,
@@ -82,7 +82,7 @@ internal class GenreLibraryServiceTests
             PlayLink = "PlayLink2",
             TrackInfoBaseLink = "TrackInfoBaseLink2"
         };
-        genres = [perantGenre, subGenre1, subGenre2];
+        genres = [parentGenre, subGenre1, subGenre2];
     }
 
     [SetUp]
@@ -112,7 +112,7 @@ internal class GenreLibraryServiceTests
 
         var dbGenres = await genreRepository.GetAllGenres();
 
-        var genresCount = 3; //1 perant + 2 sub;
+        var genresCount = 3; //1 parent + 2 sub;
 
         Assert.Multiple(() =>
         {
@@ -144,7 +144,7 @@ internal class GenreLibraryServiceTests
 
         var dbGenres = await genreRepository.GetAllGenres();
 
-        var genresCount = 3; //1 perant + 2 sub;
+        var genresCount = 3; //1 parent + 2 sub;
 
         Assert.Multiple(() =>
         {
@@ -198,12 +198,42 @@ internal class GenreLibraryServiceTests
 
         var dbGenres = await genreRepository.GetAllGenres();
 
-        var genresCount = 3; //1 perant + 2 sub;
+        var genresCount = 3; //1 parent + 2 sub;
 
         Assert.Multiple(() =>
         {
             Assert.That(updatedGenres, Has.Count.EqualTo(0));
             Assert.That(newGenres, Has.Count.EqualTo(genresCount));
+            Assert.That(dbGenres, Has.Count.EqualTo(genresCount));
+        });
+    }
+
+    [Test]
+    public async Task UpdateGenres_HasNewGenre_AddNewGenre()
+    {
+        using var memoryDbContex = CreateSqliteContext();
+        var mockRemoteRepository = new Mock<IRemoteRepository>();
+        var genreRepository = new Db.Repository(memoryDbContex);
+
+        mockRemoteRepository
+            .Setup(r => r.GetGenres())
+            .ReturnsAsync(genres);
+
+        var genreLibraryService = new GenreLibraryService(mockRemoteRepository.Object, genreRepository);
+
+      
+        List<Genre> checkedGenres = [.. genres.Take(2)];
+        await genreRepository.AddGenres(checkedGenres);
+
+        await genreLibraryService.UpdateGenres(checkedGenres);
+
+        var dbGenres = await genreRepository.GetAllGenres();
+
+        var genresCount = 3; //1 parent + 2 sub;
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(checkedGenres, Has.Count.EqualTo(genresCount));
             Assert.That(dbGenres, Has.Count.EqualTo(genresCount));
         });
     }

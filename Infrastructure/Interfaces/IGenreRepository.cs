@@ -10,7 +10,7 @@ public interface IGenreRepository
     public Task<List<Genre>> GetAllActiveGenres();
     public Task AddGenres(List<Genre> genres);
     public Task DisableGenre(string genreKey);
-    public Task ActivateSubGenres(string perantGenreKey);
+    public Task ActivateSubGenres(string parentGenreKey);
     public Task IncreaseTrackCount(string genreKey);
     public Task ChangeRating(string genreKey, int rating);
     public Task ItIsLastChoice(string genreKey);
