@@ -10,6 +10,12 @@ public partial class GenresViewerForm : Form
     private IGenreLibraryService genreLibraryService;
     private List<Genre> genres;
 
+    private DataGridViewCellStyle readOnlyStyle = new()
+    {
+        BackColor = SystemColors.GradientInactiveCaption,
+        Alignment = DataGridViewContentAlignment.MiddleCenter
+    };
+
     private int indexItIsParentColumn;
     private int indexParentGenreKeyColumn;
     private int indexParentGenreNameColumn;
@@ -38,6 +44,7 @@ public partial class GenresViewerForm : Form
                     DataPropertyName = nameof(Genre.Key),
                     ReadOnly = true,
                     Visible = false,
+                    DefaultCellStyle = readOnlyStyle,
                 },
                 new DataGridViewTextBoxColumn
                 {
@@ -53,6 +60,7 @@ public partial class GenresViewerForm : Form
                     ValueType = typeof(bool),
                     ReadOnly = true,
                     Visible = false,
+                    DefaultCellStyle = readOnlyStyle,
                 },
                 new DataGridViewTextBoxColumn
                 {
@@ -61,12 +69,14 @@ public partial class GenresViewerForm : Form
                     DataPropertyName = nameof(Genre.ParentGenreKey),
                     ReadOnly = true,
                     Visible = false,
+                    DefaultCellStyle = readOnlyStyle,
                 },
                 new DataGridViewTextBoxColumn
                 {
                     HeaderText = "Parent Genre Name",
                     Name = "Parent Genre Name",
                     ReadOnly = true,
+                    DefaultCellStyle = readOnlyStyle,
                 },
                 new DataGridViewCheckBoxColumn
                 {
@@ -75,6 +85,7 @@ public partial class GenresViewerForm : Form
                     DataPropertyName = nameof(Genre.IsAvailable),
                     ValueType = typeof(bool),
                     ReadOnly = true,
+                    DefaultCellStyle = readOnlyStyle,
                 },
                 new DataGridViewCheckBoxColumn
                 {
@@ -97,6 +108,7 @@ public partial class GenresViewerForm : Form
                     DataPropertyName = nameof(Genre.IsLastChoice),
                     ValueType = typeof(bool),
                     ReadOnly = true,
+                    DefaultCellStyle = readOnlyStyle,
                 },
                 new DataGridViewTextBoxColumn
                 {
@@ -105,6 +117,7 @@ public partial class GenresViewerForm : Form
                     DataPropertyName = nameof(Genre.TrackCount),
                     ReadOnly = true,
                     ValueType = typeof(int),
+                    DefaultCellStyle = readOnlyStyle,
                 },
                 new DataGridViewTextBoxColumn
                 {
@@ -113,6 +126,7 @@ public partial class GenresViewerForm : Form
                     DataPropertyName = nameof(Genre.RatingCount),
                     ReadOnly = true,
                     ValueType = typeof(int),
+                    DefaultCellStyle = readOnlyStyle,
                 },
                 new DataGridViewTextBoxColumn
                 {
