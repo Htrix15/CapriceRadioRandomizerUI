@@ -138,18 +138,31 @@ public partial class PageService: IPageService, IRemoteService
 
     public async Task<List<Genre>> CreateGenres(HtmlDocument mainPage)
     {
-        List<Genre> result = [];
+        List<Genre> subGenres = [];
+        List<Genre> parentGenres = [];
 
         var genresTables = SearchGenresTables(mainPage);
 
-        foreach(var genreTable in genresTables)
+        foreach (var genreTable in genresTables)
         {
             var mainGenreTable = SearchMainGenreTable(genreTable);
             var mainGenreName = GetMainGenreName(mainGenreTable);
             var mainGenreKey = GetMainGenreKey(mainGenreTable);
             var subGenresLinks = GetSubGenresLinks(genreTable);
+            parentGenres.Add(new Genre()
+            {
+                Key = mainGenreKey,
+                Name = mainGenreName,
+                ItIsParent = true,
+                IsAvailable = true,
+                IsDisabled = false,
+                IsSkip = false,
+                TrackCount = 0,
+                RatingCount = 0,
+                Rating = 0,
 
-            foreach(var subGenresLink in subGenresLinks)
+            });
+            foreach (var subGenresLink in subGenresLinks)
             {
                 var subGenreLink = CreateSubGenreLink(subGenresLink.url);
                 var genrePage = await GetPage(subGenreLink);
@@ -160,26 +173,12 @@ public partial class PageService: IPageService, IRemoteService
                 var genreKey = GetGenreKey(jsScriptParamsValues);
                 var remoteSources = CreateRemoteSourcesFromJsParams(jsScriptParamsValues);
                 remoteSources.Key = genreKey;
-
-                result.Add(new Genre()
+                subGenres.Add(new Genre()
                 {
                     Key = genreKey,
                     Name = subGenresLink.genreName,
                     ItIsParent = false,
                     ParentGenreKey = mainGenreKey,
-                    ParentGenre = new Genre()
-                    {
-                        Key = mainGenreKey,
-                        Name = mainGenreName,
-                        ItIsParent = true,
-                        IsAvailable = true,
-                        IsDisabled = false,
-                        IsSkip = false,
-                        TrackCount = 0,
-                        RatingCount = 0,
-                        Rating = 0,
-
-                    },
                     IsAvailable = true,
                     IsDisabled = false,
                     IsSkip = false,
@@ -187,11 +186,11 @@ public partial class PageService: IPageService, IRemoteService
                     RatingCount = 0,
                     Rating = 0,
                     RemoteSources = remoteSources,
-                });
+                });        
             }
         }
 
-        return result;
+        return [.. parentGenres.DistinctBy(g => g.Key), ..subGenres];
     }
 
     public string GetInnerTextByPath(HtmlDocument page, string path)

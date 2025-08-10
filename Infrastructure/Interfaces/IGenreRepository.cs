@@ -15,4 +15,6 @@ public interface IGenreRepository
     public Task ChangeRating(string genreKey, int rating);
     public Task ItIsLastChoice(string genreKey);
     public Task UpdateGenres(List<Genre> genres, UpdateGenreOptions options);
+    public Task AddAndUpdateGenresInTransaction(List<List<Genre>>? newGenres = null,
+        List<(UpdateGenreOptions updateGenreOptions, List<Genre> genres)>? updatedGenres = null);
 }

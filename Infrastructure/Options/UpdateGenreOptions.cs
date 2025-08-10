@@ -8,5 +8,5 @@ public class UpdateGenreOptions
     public bool UpdateIsSkip { get; set; }
     public bool UpdateRating { get; set; }
     public bool UpdateRemoteSources { get; set; }
-    public bool UpdatePerantKey { get; set; }
+    public bool UpdateParentKey { get; set; }
 }
