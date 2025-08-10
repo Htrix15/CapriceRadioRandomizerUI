@@ -2,16 +2,19 @@
 using Infrastructure.Models;
 using Infrastructure.Options;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace Db;
 
-public class Repository(IApplicationDbContext dbContext) : IGenreRepository
+public class Repository(IApplicationDbContext<DatabaseFacade> dbContext) : IGenreRepository
 {
     public async Task<List<Genre>> GetAllGenres()
     {
         return await dbContext.Genres
             .AsNoTracking()
             .Include(g => g.RemoteSources)
+            .OrderBy(g => g.ParentGenre)
+            .ThenBy(g => g.Name)
             .ToListAsync();
     }
 
@@ -33,7 +36,7 @@ public class Repository(IApplicationDbContext dbContext) : IGenreRepository
     {
         return await dbContext.Genres
             .AsNoTracking()
-            .Where(g => g.IsAvailable 
+            .Where(g => g.IsAvailable
                 && !g.IsDisabled
                 && !g.IsSkip)
             .Include(g => g.RemoteSources)
@@ -116,7 +119,7 @@ public class Repository(IApplicationDbContext dbContext) : IGenreRepository
                 genre.Rating = genreUpdates.Rating;
             }
 
-            if (options.UpdateRemoteSources 
+            if (options.UpdateRemoteSources
                 && genreUpdates.RemoteSources != null
                 && genre.RemoteSources != null)
             {
@@ -124,12 +127,44 @@ public class Repository(IApplicationDbContext dbContext) : IGenreRepository
                 genre.RemoteSources.PlayLink = genreUpdates.RemoteSources.PlayLink;
             }
 
-            if (options.UpdatePerantKey)
+            if (options.UpdateParentKey && genreUpdates.ParentGenreKey != null)
             {
                 genre.ParentGenreKey = genreUpdates.ParentGenreKey;
             }
         }
 
         await dbContext.SaveChangesAsync();
+    }
+
+    public async Task AddAndUpdateGenresInTransaction(List<List<Genre>>? newGenres = null,
+        List<(UpdateGenreOptions updateGenreOptions, List<Genre> genres)>? updatedGenres = null)
+    {
+        using var transaction = await dbContext.Database.BeginTransactionAsync();
+        try
+        {
+            if (newGenres != null)
+            {
+                foreach (var genres in newGenres)
+                {
+                    await AddGenres(genres);
+                }
+            }
+
+            if (updatedGenres != null)
+            {
+                foreach (var genresWithOptions in updatedGenres)
+                {
+                    await UpdateGenres(genresWithOptions.genres, genresWithOptions.updateGenreOptions);
+                }
+
+            }
+
+            await transaction.CommitAsync();
+        }
+        catch
+        {
+            await transaction.RollbackAsync();
+            throw;
+        }
     }
 }

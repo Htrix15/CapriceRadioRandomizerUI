@@ -1,10 +1,11 @@
 ﻿using Infrastructure.Interfaces;
 using Infrastructure.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace Db;
 
-public class ApplicationDbContext : DbContext, IApplicationDbContext
+public class ApplicationDbContext : DbContext, IApplicationDbContext<DatabaseFacade>
 {
     public DbSet<Genre> Genres { get; set; }
 
@@ -15,6 +16,7 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+      
         modelBuilder.Entity<Genre>(
             builder =>
             {
@@ -27,7 +29,8 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
                    .HasMany(g => g.SubGenres)
                    .WithOne(g => g.ParentGenre)
                    .HasForeignKey(g => g.ParentGenreKey)
-                   .OnDelete(DeleteBehavior.SetNull);
+                   .HasPrincipalKey(g => g.Key)        
+                   .OnDelete(DeleteBehavior.Cascade);
             });
 
         modelBuilder.Entity<RemoteSources>(

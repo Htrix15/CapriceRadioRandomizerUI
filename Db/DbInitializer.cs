@@ -1,12 +1,16 @@
 ﻿using Infrastructure.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace Db;
 
-public class DbInitializer(ApplicationDbContext context) : IDbInitializer
+public class DbInitializer(IApplicationDbContext<DatabaseFacade> context) : IDbInitializer
 {
     public void Initialize()
     {
-        context.Database.Migrate();
+        if (context is ApplicationDbContext appContext)
+        {
+            appContext.Database.Migrate();
+        }
     }
 }

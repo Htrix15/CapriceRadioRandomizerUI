@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Db.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250802135451_AddLastChoiceFlag")]
-    partial class AddLastChoiceFlag
+    [Migration("20250809180513_InitDb")]
+    partial class InitDb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -90,7 +90,7 @@ namespace Db.Migrations
                     b.HasOne("Infrastructure.Models.Genre", "ParentGenre")
                         .WithMany("SubGenres")
                         .HasForeignKey("ParentGenreKey")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("ParentGenre");
                 });

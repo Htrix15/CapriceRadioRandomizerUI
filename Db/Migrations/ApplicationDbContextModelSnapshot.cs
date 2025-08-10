@@ -58,7 +58,7 @@ namespace Db.Migrations
 
                     b.HasIndex("ParentGenreKey");
 
-                    b.ToTable("Genres");
+                    b.ToTable("Genres", (string)null);
                 });
 
             modelBuilder.Entity("Infrastructure.Models.RemoteSources", b =>
@@ -79,7 +79,7 @@ namespace Db.Migrations
 
                     b.HasKey("Key");
 
-                    b.ToTable("RemoteSources");
+                    b.ToTable("RemoteSources", (string)null);
                 });
 
             modelBuilder.Entity("Infrastructure.Models.Genre", b =>
@@ -87,7 +87,7 @@ namespace Db.Migrations
                     b.HasOne("Infrastructure.Models.Genre", "ParentGenre")
                         .WithMany("SubGenres")
                         .HasForeignKey("ParentGenreKey")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("ParentGenre");
                 });
