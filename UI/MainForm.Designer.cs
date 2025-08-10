@@ -107,9 +107,9 @@
             // buttonLike
             // 
             buttonLike.Dock = DockStyle.Top;
-            buttonLike.Location = new Point(865, 3);
+            buttonLike.Location = new Point(859, 3);
             buttonLike.Name = "buttonLike";
-            buttonLike.Size = new Size(80, 23);
+            buttonLike.Size = new Size(86, 23);
             buttonLike.TabIndex = 0;
             buttonLike.Text = "Like";
             buttonLike.UseVisualStyleBackColor = true;
@@ -118,7 +118,7 @@
             // buttonDislike
             // 
             buttonDislike.Dock = DockStyle.Top;
-            buttonDislike.Location = new Point(784, 3);
+            buttonDislike.Location = new Point(778, 3);
             buttonDislike.Name = "buttonDislike";
             buttonDislike.Size = new Size(75, 23);
             buttonDislike.TabIndex = 1;
@@ -132,7 +132,7 @@
             comboBoxGenres.FormattingEnabled = true;
             comboBoxGenres.Location = new Point(3, 3);
             comboBoxGenres.Name = "comboBoxGenres";
-            comboBoxGenres.Size = new Size(297, 23);
+            comboBoxGenres.Size = new Size(294, 23);
             comboBoxGenres.TabIndex = 4;
             comboBoxGenres.SelectedIndexChanged += comboBoxGenres_SelectedIndexChanged;
             // 
@@ -140,16 +140,16 @@
             // 
             comboBoxRandomMode.Dock = DockStyle.Fill;
             comboBoxRandomMode.FormattingEnabled = true;
-            comboBoxRandomMode.Location = new Point(306, 3);
+            comboBoxRandomMode.Location = new Point(303, 3);
             comboBoxRandomMode.Name = "comboBoxRandomMode";
-            comboBoxRandomMode.Size = new Size(297, 23);
+            comboBoxRandomMode.Size = new Size(294, 23);
             comboBoxRandomMode.TabIndex = 5;
             comboBoxRandomMode.SelectedIndexChanged += comboBoxRandomMode_SelectedIndexChanged;
             // 
             // buttonRandom
             // 
             buttonRandom.Dock = DockStyle.Top;
-            buttonRandom.Location = new Point(609, 3);
+            buttonRandom.Location = new Point(603, 3);
             buttonRandom.Name = "buttonRandom";
             buttonRandom.Size = new Size(75, 23);
             buttonRandom.TabIndex = 2;
@@ -160,7 +160,7 @@
             // buttonDisableGenre
             // 
             buttonDisableGenre.Dock = DockStyle.Top;
-            buttonDisableGenre.Location = new Point(690, 3);
+            buttonDisableGenre.Location = new Point(684, 3);
             buttonDisableGenre.Name = "buttonDisableGenre";
             buttonDisableGenre.Size = new Size(88, 23);
             buttonDisableGenre.TabIndex = 3;

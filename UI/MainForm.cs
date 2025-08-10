@@ -96,7 +96,7 @@ public partial class MainForm : Form
 
     private async Task StartTrack()
     {
-        if (!formLoaded) return;
+        if (!formLoaded || trackState == TrackState.Playing) return;
         trackState = playerService.PlayTrack(currentSubGenre.RemoteSources!.PlayLink);
         trackPlayingToken = new CancellationTokenSource();
         await LoopUpdateTrackName(trackPlayingToken.Token);
@@ -151,6 +151,10 @@ public partial class MainForm : Form
         {
           //  labelTrackName.Text = "";
         }
+        catch (Exception)
+        {
+
+        }
     }
 
     private void RenameFormTextByGenres()
@@ -188,6 +192,7 @@ public partial class MainForm : Form
             RandomeMode.SubGenreWithRatingRange => RandomeMode.ParentAndSubGenreWithRatingRange,
             _ => randomeMode
         };
+        comboBoxRandomMode.SelectedValue = randomeMode;
     }
 
     private async Task Randomize()
