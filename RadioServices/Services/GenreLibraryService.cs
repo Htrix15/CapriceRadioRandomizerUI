@@ -37,6 +37,13 @@ public class GenreLibraryService(IRemoteRepository remoteRepository,
 
         var parentGenres = PackGenresIntoParentGenres(genres);
 
+        parentGenres = [.. parentGenres.Where(p => p.SubGenres != null 
+            && p.SubGenres.Count > 0 
+            && (p.SubGenres!.All(sg => !sg.IsDisabled) 
+                || p.SubGenres!.All(sg => !sg.IsSkip)))];
+
+        parentGenres.ForEach(pg => pg.SubGenres = [.. pg.SubGenres!.Where(sg => !sg.IsDisabled && !sg.IsSkip)]);
+
         return parentGenres;
     }
 
@@ -47,10 +54,10 @@ public class GenreLibraryService(IRemoteRepository remoteRepository,
 
         perent.SubGenres = [.. perent.SubGenres!.Where(sg => !sg.IsSkip)];
 
-        if (perent.SubGenres!.All(sg => sg.IsSkip))
+        if (perent.SubGenres.Count == 0)
         {
-            await genreRepository.SkipGenre(perent.Key);
-            perent.IsSkip = true;
+            await genreRepository.ReskipSubGenres(perent.Key);
+            perent.SubGenres = await genreRepository.GetAllSubGenres(perent.Key);
         }
     }
 

@@ -210,7 +210,7 @@ public partial class MainForm : Form
     {
         await genreLibraryService.SkipGenre(currentParentGenre, currentSubGenre);
 
-        if (currentParentGenre.IsSkip)
+        if (currentParentGenre.IsSkip || currentParentGenre.IsDisabled)
         {
             ForceChangeParentGenre();
         }
@@ -236,10 +236,14 @@ public partial class MainForm : Form
 
         if (currentParentGenre.SubGenres.Count == 0)
         {
-            await genreLibraryService.ReActiveteSubGenres(currentParentGenre.Key);
-            currentParentGenre.SubGenres.ForEach(s => s.IsDisabled = false);
+            await genreLibraryService.DisableGenre(currentParentGenre.Key);
+            parentGenres.Remove(currentParentGenre);
+            ForceChangeParentGenre();
+        } 
+        else
+        {
+            await Randomize();
         }
-        await Randomize();
     }
 
     private async void buttonDisableGenre_Click(object sender, EventArgs e)

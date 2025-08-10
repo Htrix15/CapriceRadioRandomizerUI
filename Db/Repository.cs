@@ -18,6 +18,17 @@ public class Repository(IApplicationDbContext<DatabaseFacade> dbContext) : IGenr
             .ToListAsync();
     }
 
+    public async Task<List<Genre>> GetAllSubGenres(string parentGenreKey)
+    {
+        return await dbContext.Genres
+          .AsNoTracking()
+          .Include(g => g.RemoteSources)
+          .Where(g => g.ParentGenreKey == parentGenreKey)
+          .OrderBy(g => g.ParentGenre)
+          .ThenBy(g => g.Name)
+          .ToListAsync();
+    }
+
     public async Task AddGenres(List<Genre> genres)
     {
         await dbContext.Genres.AddRangeAsync(genres);
@@ -69,6 +80,13 @@ public class Repository(IApplicationDbContext<DatabaseFacade> dbContext) : IGenr
         await dbContext.Genres.Where(g => g.ParentGenreKey == parentGenreKey)
             .ExecuteUpdateAsync(g =>
                 g.SetProperty(p => p.IsDisabled, p => false));
+    }
+
+    public async Task ReskipSubGenres(string parentGenreKey)
+    {
+        await dbContext.Genres.Where(g => g.ParentGenreKey == parentGenreKey)
+            .ExecuteUpdateAsync(g =>
+                g.SetProperty(p => p.IsSkip, p => false));
     }
 
     public async Task ItIsLastChoice(string genreKey)
