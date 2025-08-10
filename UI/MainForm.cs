@@ -16,6 +16,7 @@ public partial class MainForm : Form
     private Genre currentSubGenre;
     private RandomeMode randomeMode;
     private bool isComboBoxLoaded = false;
+    private bool formLoaded = false;
 
     private GenresViewerFormFactory genresViewerFormFactory;
     private GenresViewerForm genresViewerForm;
@@ -40,6 +41,7 @@ public partial class MainForm : Form
         await InitComboBoxGenres();
         Helpers.EnableAllControls(this);
         labelProgress.Text = "";
+        formLoaded = true;
     }
 
     private async Task InitGenresViewerForm()
@@ -94,6 +96,7 @@ public partial class MainForm : Form
 
     private async Task StartTrack()
     {
+        if (!formLoaded) return;
         trackState = playerService.PlayTrack(currentSubGenre.RemoteSources!.PlayLink);
         trackPlayingToken = new CancellationTokenSource();
         await LoopUpdateTrackName(trackPlayingToken.Token);
@@ -101,6 +104,7 @@ public partial class MainForm : Form
 
     private async Task StopTrack()
     {
+        if (!formLoaded) return;
         trackPlayingToken?.Cancel();
         trackState = playerService.StopTrack();
         await Task.Delay(1000);// Fix not play
@@ -145,7 +149,7 @@ public partial class MainForm : Form
         }
         catch (OperationCanceledException)
         {
-            labelTrackName.Text = "";
+          //  labelTrackName.Text = "";
         }
     }
 
@@ -189,7 +193,7 @@ public partial class MainForm : Form
     private async Task Randomize()
     {
         await StopTrack();
-
+ 
         (currentParentGenre, currentSubGenre) = randomGenreService.GetRandomGenre(randomeMode, currentParentGenre, parentGenres);
         comboBoxGenres.SelectedItem = currentParentGenre;
         RenameFormTextByGenres();
